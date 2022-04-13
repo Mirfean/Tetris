@@ -1,0 +1,24 @@
+fileFormatVersion: 2
+guid: 7f39549d58c21f64d8b3c2525441dcb5
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Toleis
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: ddf621b37afc1ec4a87bf9545130ebd2, type: 3}
+  - {fileID: 12800000, guid: fc6691a32329d424789672fd0648527b, type: 3}
+  - {fileID: 12800000, guid: 19859df202e330b45b9951ba09cf74e2, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
