@@ -16,6 +16,8 @@ public class Board : MonoBehaviour
 
     private Transform[,] m_grid;
 
+    private Vector3Int modifier;
+
     private void Awake()
     {
         m_grid = new Transform[m_width, m_height];
@@ -25,6 +27,7 @@ public class Board : MonoBehaviour
     private void Start()
     {
         DrawEmptyBoard();
+        modifier = getModifier();
     }
 
     // Update is called once per frame
@@ -35,7 +38,10 @@ public class Board : MonoBehaviour
 
     bool IsWiththinBoard(Vector3 v)
     {
-        return (v.x >= m_emptySprite.position.x && v.x < m_width + m_emptySprite.position.x && v.y >= m_emptySprite.position.y);
+        return (
+            v.x >= m_emptySprite.position.x && 
+            v.x < m_width + m_emptySprite.position.x &&
+            v.y >= m_emptySprite.position.y);
     }
 
     public bool IsValidPosition(Shape shape)
@@ -47,9 +53,17 @@ public class Board : MonoBehaviour
             {
                 return false;
             }
-            
+            if (IsOccupied((int)s.position.x - modifier.x, (int)s.position.y - modifier.y, shape))
+            {
+                return false;
+            }
         }
-        return false;
+        return true;
+    }
+
+    public bool IsOccupied(int x, int y, Shape shape)
+    {
+        return (m_grid[x, y] != null && m_grid[x, y].parent != shape.transform);
     }
 
 
@@ -65,4 +79,21 @@ public class Board : MonoBehaviour
             }
         }
     }
+
+    public void StoreShapeInGrid(Shape shape)
+    {
+        if (shape != null)
+        {
+            foreach (Transform child in shape.transform)
+            {
+                m_grid[(int)  child.position.x - modifier.x, (int) child.position.y - modifier.y] = child;
+            }
+        }
+    }
+
+    Vector3Int getModifier()
+    {
+        return new Vector3Int((int)m_emptySprite.position.x, (int)m_emptySprite.position.y, (int)m_emptySprite.position.z);
+    }
+
 }

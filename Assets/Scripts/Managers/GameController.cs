@@ -15,12 +15,14 @@ public class GameController : MonoBehaviour
     {
         gameBoard = GameObject.FindWithTag("Board").GetComponent<Board>();
         gameSpawner = GameObject.FindWithTag("Spawner").GetComponent<Spawner>();
-        activeShapeSpeed = 1f;
+        activeShapeSpeed = 0.25f;
     }
 
     // Update is called once per frame
     private void Update()
     {
+
+
         if (gameSpawner)
         {
             if (!activeShape)
@@ -35,8 +37,15 @@ public class GameController : MonoBehaviour
 
         if (activeShape && nextMove < Time.time)
         {
-            activeShape.MoveShape(MoveDirection.DOWN);
             nextMove = Time.time + activeShapeSpeed;
+            activeShape.MoveShape(MoveDirection.DOWN);
+
+            if (!gameBoard.IsValidPosition(activeShape))
+            {
+                activeShape.MoveShape(MoveDirection.UP);
+                gameBoard.StoreShapeInGrid(activeShape);
+                activeShape = gameSpawner.SpawnShape();
+            }
         }
     }
 }

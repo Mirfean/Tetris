@@ -38,7 +38,7 @@ public class Shape : MonoBehaviour
                 break;
 
             case MoveDirection.UP:
-                Move(new Vector3(-1, 1, 0));
+                Move(new Vector3(0, 1, 0));
                 break;
         }
     }
