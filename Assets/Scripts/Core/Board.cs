@@ -53,9 +53,12 @@ public class Board : MonoBehaviour
             {
                 return false;
             }
-            if (IsOccupied((int)s.position.x - modifier.x, (int)s.position.y - modifier.y, shape))
+            if (s.position.y <= m_emptySprite.position.y + m_height)
             {
-                return false;
+                if (IsOccupied((int)s.position.x - modifier.x, (int)s.position.y - modifier.y, shape))
+                {
+                    return false;
+                }
             }
         }
         return true;
@@ -63,7 +66,7 @@ public class Board : MonoBehaviour
 
     public bool IsOccupied(int x, int y, Shape shape)
     {
-        return (m_grid[x, y] != null && m_grid[x, y].parent != shape.transform);
+        return m_grid[x, y] != null && m_grid[x, y].parent != shape.transform;
     }
 
 
@@ -82,13 +85,21 @@ public class Board : MonoBehaviour
 
     public void StoreShapeInGrid(Shape shape)
     {
-        if (shape != null)
+        try
         {
-            foreach (Transform child in shape.transform)
+            if (shape != null)
             {
-                m_grid[(int)  child.position.x - modifier.x, (int) child.position.y - modifier.y] = child;
+                foreach (Transform child in shape.transform)
+                {
+                    m_grid[(int)child.position.x - modifier.x, (int)child.position.y - modifier.y] = child;
+                }
             }
         }
+        catch (System.IndexOutOfRangeException e)
+        {
+            Debug.Log($"Out of range - {e}");
+        }
+           
     }
 
     Vector3Int getModifier()
