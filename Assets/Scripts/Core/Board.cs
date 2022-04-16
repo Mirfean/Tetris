@@ -28,6 +28,7 @@ public class Board : MonoBehaviour
     {
         DrawEmptyBoard();
         modifier = getModifier();
+        Debug.Log("Modifier " + modifier);
     }
 
     // Update is called once per frame
@@ -39,7 +40,7 @@ public class Board : MonoBehaviour
     bool IsWiththinBoard(Vector3 v)
     {
         return (
-            v.x >= m_emptySprite.position.x && 
+            v.x >= m_emptySprite.position.x &&
             v.x < m_width + m_emptySprite.position.x &&
             v.y >= m_emptySprite.position.y);
     }
@@ -49,14 +50,17 @@ public class Board : MonoBehaviour
         foreach (Transform s in shape.transform)
         {
             Vector2 pos = VectorF.Round(s.position);
-            if (!IsWiththinBoard(s.position))
+            //Vector2 pos = new Vector2Int((int)s.position.x, (int)s.position.y);
+            if (!IsWiththinBoard(pos))
             {
+                Debug.Log($"Not in Board! {pos}");
                 return false;
             }
-            if (s.position.y <= m_emptySprite.position.y + m_height)
+            if (pos.y <= m_emptySprite.position.y + m_height)
             {
-                if (IsOccupied((int)s.position.x - modifier.x, (int)s.position.y - modifier.y, shape))
+                if (IsOccupied((int)pos.x - modifier.x, (int)pos.y - modifier.y, shape))
                 {
+                    Debug.Log($"Occupied! {pos.x} - {modifier.x}, {pos.y} - {modifier.y}");
                     return false;
                 }
             }
@@ -66,6 +70,14 @@ public class Board : MonoBehaviour
 
     public bool IsOccupied(int x, int y, Shape shape)
     {
+/*        if (m_grid[x,y] != null)
+        {
+            Debug.Log($"not null in{x} {y}");
+        }
+        if (m_grid[x, y].parent != shape.transform)
+        {
+            Debug.Log($"parent in{x} {y} " + m_grid[x, y].parent);
+        }*/
         return m_grid[x, y] != null && m_grid[x, y].parent != shape.transform;
     }
 
@@ -91,6 +103,7 @@ public class Board : MonoBehaviour
             {
                 foreach (Transform child in shape.transform)
                 {
+                    Debug.Log($"Filling {(int)child.position.x - modifier.x} {(int)child.position.y - modifier.y}");
                     m_grid[(int)child.position.x - modifier.x, (int)child.position.y - modifier.y] = child;
                 }
             }
@@ -99,7 +112,7 @@ public class Board : MonoBehaviour
         {
             Debug.Log($"Out of range - {e}");
         }
-           
+
     }
 
     Vector3Int getModifier()

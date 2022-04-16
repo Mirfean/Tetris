@@ -21,6 +21,26 @@ public class Shape : MonoBehaviour
         transform.position += moveDirection;
     }
 
+    public void MoveShape(Vector2 vector2)
+    {
+        if (vector2.x != 0)
+        {
+            if (vector2.x < 0)
+            {
+                MoveShape(MoveDirection.LEFT);
+            }
+            else if (vector2.x > 0)
+            {
+                MoveShape(MoveDirection.RIGHT);
+            }
+        }
+        else if (vector2.y < 0)
+        {
+            MoveShape(MoveDirection.DOWN);
+        }
+    }
+
+
     public void MoveShape(MoveDirection md)
     {
         switch (md)
