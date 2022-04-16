@@ -16,11 +16,16 @@ public class GameController : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
+        // Input init
         controls = new BasicControls();
         controls.Enable();
+
+        // Prepare all core elements
         gameBoard = GameObject.FindWithTag("Board").GetComponent<Board>();
         gameSpawner = GameObject.FindWithTag("Spawner").GetComponent<Spawner>();
-        activeShapeSpeed = 0.15f;
+
+
+        activeShapeSpeed = 0.5f;
     }
 
     // Update is called once per frame
@@ -44,7 +49,7 @@ public class GameController : MonoBehaviour
         if (activeShape && nextMove < Time.time)
         {
             nextMove = Time.time + activeShapeSpeed;
-            activeShape.MoveShape(MoveDirection.DOWN);
+            activeShape.MoveShape(MoveDirection.DOWN); 
 
             if (!gameBoard.IsValidPosition(activeShape))
             {
