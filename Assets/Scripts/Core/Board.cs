@@ -49,8 +49,8 @@ public class Board : MonoBehaviour
     {
         foreach (Transform s in shape.transform)
         {
-            //Vector2 pos = VectorF.Round(s.position);
-            Vector2 pos = new Vector2Int((int)s.position.x, (int)s.position.y);
+            Vector2 pos = VectorF.Round(s.position);
+            //Vector2 pos = new Vector2Int((int)s.position.x, (int)s.position.y);
             if (!IsWiththinBoard(pos))
             {
                 Debug.Log($"Not in Board! {pos}");

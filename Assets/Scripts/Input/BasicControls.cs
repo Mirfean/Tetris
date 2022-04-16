@@ -142,7 +142,7 @@ public partial class @BasicControls : IInputActionCollection2, IDisposable
                     ""name"": ""2D Vector"",
                     ""id"": ""80f1b852-566e-4e54-b6ee-02413cd4a63e"",
                     ""path"": ""2DVector"",
-                    ""interactions"": ""Hold(duration=0.2,pressPoint=0.2),Press"",
+                    ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Movement"",
