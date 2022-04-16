@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
+    [SerializeField]
+    private BasicControls controls;
+
     private Board gameBoard;
 
     private Spawner gameSpawner;
@@ -13,6 +16,8 @@ public class GameController : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
+        controls = new BasicControls();
+        controls.Enable();
         gameBoard = GameObject.FindWithTag("Board").GetComponent<Board>();
         gameSpawner = GameObject.FindWithTag("Spawner").GetComponent<Spawner>();
         activeShapeSpeed = 0.15f;
@@ -21,35 +26,8 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        Debug.Log(Input.GetAxis("MoveRight"));
-        switch (Input.inputString)
-        {
-            case "MoveRight":
-                activeShape.MoveShape(MoveDirection.RIGHT);
-                if (!gameBoard.IsValidPosition(activeShape))
-                {
-                    activeShape.MoveShape(MoveDirection.LEFT);
-                }
-                break;
-            case "MoveLeft":
-                activeShape.MoveShape(MoveDirection.LEFT);
-                break;
-            case "MoveDown":
-                activeShape.MoveShape(MoveDirection.DOWN);
-                break;
-            case "Horizontal":
-                break;
-            case "Vertical":
-                break;
-            case "Submit":
-                break;
-            case "Cancel":
-                break;
-            default:
-                Debug.Log("Nothing");
-                break;
-        }
-
+        controls.Base.Movement.performed += ctx => activeShape.MoveShape(ctx.ReadValue<Vector2>());
+        controls.Base.Rotate.performed += _ => activeShape.RotateRight();
 
         if (gameSpawner)
         {
