@@ -31,9 +31,6 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        controls.Base.Movement.performed += ctx => activeShape.MoveShape(ctx.ReadValue<Vector2>());
-        controls.Base.Rotate.performed += _ => activeShape.RotateRight();
-
         if (gameSpawner)
         {
             if (!activeShape)
@@ -41,22 +38,63 @@ public class GameController : MonoBehaviour
                 activeShape = gameSpawner.SpawnShape();
             }
         }
-        else
-        {
-            Debug.Log("Dupa");
-        }
 
-        if (activeShape && nextMove < Time.time)
-        {
-            nextMove = Time.time + activeShapeSpeed;
-            activeShape.MoveShape(MoveDirection.DOWN); 
+        //Control
+        controls.Base.Movement.performed += ctx => MovingShapeByPlayer(ctx.ReadValue<Vector2>());
+        controls.Base.Rotate.performed += _ => activeShape.RotateRight();
 
-            if (!gameBoard.IsValidPosition(activeShape))
-            {
-                activeShape.MoveShape(MoveDirection.UP);
-                gameBoard.StoreShapeInGrid(activeShape);
-                activeShape = gameSpawner.SpawnShape();
-            }
+        MovingShapeDown();
+    }
+
+    private void MovingShapeByPlayer(Vector2 vector2)
+    {
+        switch (vector2)
+        {
+            case Vector2 v when v.Equals(Vector2.left):
+                activeShape.MoveShape(MoveDirection.LEFT);
+                CheckValidPosition(MoveDirection.LEFT);
+                break;
+            case Vector2 v when v.Equals(Vector2.right):
+                activeShape.MoveShape(MoveDirection.RIGHT);
+                CheckValidPosition(MoveDirection.RIGHT);
+                break;
+            case Vector2 v when v.Equals(Vector2.down):
+                activeShape.MoveShape(MoveDirection.DOWN);
+                CheckValidPosition(MoveDirection.DOWN);
+                break;
         }
     }
+
+    private void MovingShapeDown()
+    {
+        if (activeShape && nextMove<Time.time)
+        {
+            nextMove = Time.time + activeShapeSpeed;
+            activeShape.MoveShape(MoveDirection.DOWN);
+            CheckValidPosition(MoveDirection.DOWN);
+        }
+    }
+
+    private void CheckValidPosition(MoveDirection md)
+    {
+        if (!gameBoard.IsValidPosition(activeShape))
+        {
+            switch (md)
+            {
+                case MoveDirection.DOWN:
+                    activeShape.MoveShape(MoveDirection.UP);
+                    gameBoard.StoreShapeInGrid(activeShape);
+                    activeShape = gameSpawner.SpawnShape();
+                    break;
+                case MoveDirection.LEFT:
+                    activeShape.MoveShape(MoveDirection.RIGHT);
+                    break;
+                case MoveDirection.RIGHT:
+                    activeShape.MoveShape(MoveDirection.LEFT);
+                    break;
+            }
+            
+        }
+    }
+
 }
