@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Board : MonoBehaviour
@@ -58,9 +59,9 @@ public class Board : MonoBehaviour
             }
             if (pos.y <= m_emptySprite.position.y + m_height)
             {
-                if (IsOccupied((int)pos.x - modifier.x, (int)pos.y - modifier.y, shape))
+                if (IsOccupied((int)pos.x, (int)pos.y, shape))
                 {
-                    Debug.Log($"Occupied! {pos.x} - {modifier.x}, {pos.y} - {modifier.y}");
+                    Debug.Log($"Occupied! {pos.x}, {pos.y}");
                     return false;
                 }
             }
@@ -68,17 +69,90 @@ public class Board : MonoBehaviour
         return true;
     }
 
+    bool IsComplete(int y)
+    {
+        for (int x = 0; x < m_width; ++x)
+        {
+            if (m_grid[x, y] == null)
+            {
+                return false;
+            }
+
+        }
+        return true;
+    }
+
+    void ClearRow(int y)
+    {
+        for (int x = 0; x < m_width; ++x)
+        {
+            if (m_grid[x, y] != null)
+            {
+                Destroy(m_grid[x, y].gameObject);
+
+            }
+            m_grid[x, y] = null;
+
+        }
+
+    }
+
+    void ShiftOneRowDown(int y)
+    {
+
+        for (int x = 0; x < m_width; ++x)
+        {
+            if (m_grid[x, y] != null)
+            {
+                m_grid[x, y - 1] = m_grid[x, y];
+                m_grid[x, y] = null;
+                m_grid[x, y - 1].position += new Vector3(0, -1, 0);
+            }
+        }
+    }
+
+    void ShiftRowsDown(int startY)
+    {
+        for (int i = startY; i < m_height; ++i)
+        {
+            ShiftOneRowDown(i);
+        }
+    }
+
+    public void ClearAllRows()
+    {
+        for (int y = 0; y < m_height; ++y)
+        {
+            if (IsComplete(y))
+            {
+                ClearRow(y);
+
+                ShiftRowsDown(y + 1);
+
+                y--;
+            }
+
+        }
+
+    }
+
     public bool IsOccupied(int x, int y, Shape shape)
     {
-/*        if (m_grid[x,y] != null)
+        try
         {
-            Debug.Log($"not null in{x} {y}");
+            return m_grid[x, y] != null && m_grid[x, y].parent != shape.transform;
         }
-        if (m_grid[x, y].parent != shape.transform)
+        catch
         {
-            Debug.Log($"parent in{x} {y} " + m_grid[x, y].parent);
-        }*/
-        return m_grid[x, y] != null && m_grid[x, y].parent != shape.transform;
+            if (y <= m_emptySprite.position.y + m_height + 4)
+            {
+                return false;
+            }
+            else
+            {
+                throw new System.IndexOutOfRangeException("Occupied error");
+            }
+        }
     }
 
 
@@ -88,6 +162,10 @@ public class Board : MonoBehaviour
         {
             for (int x = 0; x < m_width; x++)
             {
+                if(y == 0 && x == 0)
+                {
+                    continue;
+                }
                 Transform clone = Instantiate(m_emptySprite, new Vector3(x + m_emptySprite.position.x, y + m_emptySprite.position.y, 0), Quaternion.identity) as Transform;
                 clone.name = $"Board Space {x} {y}";
                 clone.transform.parent = transform;
@@ -103,8 +181,10 @@ public class Board : MonoBehaviour
             {
                 foreach (Transform child in shape.transform)
                 {
-                    Debug.Log($"Filling {(int)child.position.x - modifier.x} {(int)child.position.y - modifier.y}");
-                    m_grid[(int)child.position.x - modifier.x, (int)child.position.y - modifier.y] = child;
+                    Debug.Log($"Filling {(int)child.position.x} {(int)child.position.y}");
+                    Vector2 loc = VectorF.Round(child.position);
+                    //m_grid[(int)child.position.x, (int)child.position.y] = child;
+                    m_grid[(int)loc.x, (int)loc.y] = child;
                 }
             }
         }
@@ -112,6 +192,26 @@ public class Board : MonoBehaviour
         {
             Debug.Log($"Out of range - {e}");
         }
+        List<string> table = new List<string>();
+        for (int j = 0; j < m_height; j++)
+        {
+            string line = "";
+            for  (int i = 0; i < m_width; i++)
+            {
+                if ((m_grid[i,j] != null))
+                {
+                    line += "x";
+                }
+                else
+                {
+                    line += "o";
+                }
+                
+            }
+            table.Add(line);
+
+        }
+        //table.ForEach(Debug.Log);
 
     }
 

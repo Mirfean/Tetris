@@ -78,7 +78,7 @@ public partial class @BasicControls : IInputActionCollection2, IDisposable
                     ""id"": ""2b3933d9-2e16-4b1c-a4e7-7111a6cdd0d6"",
                     ""expectedControlType"": ""Dpad"",
                     ""processors"": """",
-                    ""interactions"": """",
+                    ""interactions"": ""Hold(duration=0.15,pressPoint=0.2)"",
                     ""initialStateCheck"": true
                 }
             ],

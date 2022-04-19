@@ -10,8 +10,15 @@ public class GameController : MonoBehaviour
     private Spawner gameSpawner;
 
     private Shape activeShape;
-    private float activeShapeSpeed;
-    private float nextMove;
+    
+    private float autoActiveShapeSpeed;
+    private float autoNextMoveDown;
+    
+    private float horizontalSpeed;
+    private float nextMoveHorizontal;
+
+    private float verticalSpeed;
+    private float nextMoveVertical;
 
     // Start is called before the first frame update
     private void Start()
@@ -23,9 +30,11 @@ public class GameController : MonoBehaviour
         // Prepare all core elements
         gameBoard = GameObject.FindWithTag("Board").GetComponent<Board>();
         gameSpawner = GameObject.FindWithTag("Spawner").GetComponent<Spawner>();
+        gameSpawner.transform.position = VectorF.Round(gameSpawner.transform.position);
 
-
-        activeShapeSpeed = 0.5f;
+        verticalSpeed = 0.1f;
+        horizontalSpeed = 0.1f;
+        autoActiveShapeSpeed = 0.25f;
     }
 
     // Update is called once per frame
@@ -40,7 +49,8 @@ public class GameController : MonoBehaviour
         }
 
         //Control
-        controls.Base.Movement.performed += ctx => MovingShapeByPlayer(ctx.ReadValue<Vector2>());
+        MovingShapeByPlayer(controls.Base.Movement.ReadValue<Vector2>());
+        //controls.Base.Movement.performed += ctx => MovingShapeByPlayer(ctx.ReadValue<Vector2>());
         controls.Base.Rotate.performed += _ => activeShape.RotateRight();
 
         MovingShapeDown();
@@ -48,30 +58,47 @@ public class GameController : MonoBehaviour
 
     private void MovingShapeByPlayer(Vector2 vector2)
     {
+        
         switch (vector2)
         {
             case Vector2 v when v.Equals(Vector2.left):
-                activeShape.MoveShape(MoveDirection.LEFT);
-                CheckValidPosition(MoveDirection.LEFT);
+                MoveAndCheck(MoveDirection.LEFT);
                 break;
             case Vector2 v when v.Equals(Vector2.right):
-                activeShape.MoveShape(MoveDirection.RIGHT);
-                CheckValidPosition(MoveDirection.RIGHT);
+                MoveAndCheck(MoveDirection.RIGHT);
                 break;
             case Vector2 v when v.Equals(Vector2.down):
-                activeShape.MoveShape(MoveDirection.DOWN);
-                CheckValidPosition(MoveDirection.DOWN);
+                MoveAndCheck(MoveDirection.DOWN);
+                break;
+            default:
                 break;
         }
+
     }
 
     private void MovingShapeDown()
     {
-        if (activeShape && nextMove<Time.time)
+        if (activeShape && autoNextMoveDown<Time.time)
         {
-            nextMove = Time.time + activeShapeSpeed;
+            autoNextMoveDown = Time.time + autoActiveShapeSpeed;
             activeShape.MoveShape(MoveDirection.DOWN);
             CheckValidPosition(MoveDirection.DOWN);
+        }
+    }
+
+    private void MoveAndCheck(MoveDirection md)
+    {
+        if ((md == MoveDirection.LEFT || md == MoveDirection.RIGHT) && nextMoveHorizontal < Time.time)
+        {
+            nextMoveHorizontal = Time.time + horizontalSpeed;
+            activeShape.MoveShape(md);
+            CheckValidPosition(md);
+        }
+        if (md == MoveDirection.DOWN && nextMoveVertical < Time.time)
+        {
+            nextMoveVertical = Time.time + verticalSpeed;
+            activeShape.MoveShape(md);
+            CheckValidPosition(md);
         }
     }
 
@@ -82,9 +109,7 @@ public class GameController : MonoBehaviour
             switch (md)
             {
                 case MoveDirection.DOWN:
-                    activeShape.MoveShape(MoveDirection.UP);
-                    gameBoard.StoreShapeInGrid(activeShape);
-                    activeShape = gameSpawner.SpawnShape();
+                    LandShape();
                     break;
                 case MoveDirection.LEFT:
                     activeShape.MoveShape(MoveDirection.RIGHT);
@@ -95,6 +120,15 @@ public class GameController : MonoBehaviour
             }
             
         }
+    }
+
+    void LandShape()
+    {
+        activeShape.MoveShape(MoveDirection.UP);
+        gameBoard.StoreShapeInGrid(activeShape);
+        activeShape = gameSpawner.SpawnShape();
+
+        gameBoard.ClearAllRows();
     }
 
 }
