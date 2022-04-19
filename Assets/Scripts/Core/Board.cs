@@ -175,17 +175,21 @@ public class Board : MonoBehaviour
 
     public void StoreShapeInGrid(Shape shape)
     {
+        if (shape == null)
+        {
+            return;
+        }
         try
         {
-            if (shape != null)
+           if (shape != null)
             {
                 foreach (Transform child in shape.transform)
                 {
-                    Debug.Log($"Filling {(int)child.position.x} {(int)child.position.y}");
-                    Vector2 loc = VectorF.Round(child.position);
-                    //m_grid[(int)child.position.x, (int)child.position.y] = child;
-                    m_grid[(int)loc.x, (int)loc.y] = child;
+                    Vector2 pos = VectorF.Round(child.position);
+                    Debug.Log($"Filling {pos.x} {pos.y}");
+                    m_grid[(int)pos.x, (int)pos.y] = child;
                 }
+            }
             }
         }
         catch (System.IndexOutOfRangeException e)
