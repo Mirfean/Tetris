@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
@@ -20,9 +21,17 @@ public class GameController : MonoBehaviour
     private float verticalSpeed;
     private float nextMoveVertical;
 
+    private bool gameOver;
+
+    [SerializeField]
+    private GameObject gameOverPanel;
+
     // Start is called before the first frame update
     private void Start()
     {
+        gameOver = false;
+        gameOverPanel.SetActive(false);
+
         // Input init
         controls = new BasicControls();
         controls.Enable();
@@ -40,7 +49,7 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        if (gameSpawner)
+        if (gameSpawner && !gameOver)
         {
             if (!activeShape)
             {
@@ -109,7 +118,18 @@ public class GameController : MonoBehaviour
             switch (md)
             {
                 case MoveDirection.DOWN:
-                    LandShape();
+                    if (gameBoard.IsOverLimit(activeShape))
+                    {
+                        activeShape.MoveShape(MoveDirection.UP);
+                        gameOver = true;
+                        gameOverPanel.SetActive(true);
+                        Debug.LogWarning("You lost!");
+                    }
+                    else
+                    {
+                        LandShape();
+                    }
+                    
                     break;
                 case MoveDirection.LEFT:
                     activeShape.MoveShape(MoveDirection.RIGHT);
@@ -129,6 +149,15 @@ public class GameController : MonoBehaviour
         activeShape = gameSpawner.SpawnShape();
 
         gameBoard.ClearAllRows();
+    }
+
+    public void Restart()
+    {
+        //TODO:
+        //- Save score
+
+        Debug.Log("Restart");
+        SceneManager.LoadScene(0);
     }
 
 }

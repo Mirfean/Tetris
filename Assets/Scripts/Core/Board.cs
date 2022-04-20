@@ -190,7 +190,7 @@ public class Board : MonoBehaviour
                     m_grid[(int)pos.x, (int)pos.y] = child;
                 }
             }
-            }
+            
         }
         catch (System.IndexOutOfRangeException e)
         {
@@ -217,6 +217,18 @@ public class Board : MonoBehaviour
         }
         //table.ForEach(Debug.Log);
 
+    }
+
+    public bool IsOverLimit(Shape shape)
+    {
+        foreach (Transform child in shape.transform)
+        {
+            if (child.transform.position.y >= m_height)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     Vector3Int getModifier()
