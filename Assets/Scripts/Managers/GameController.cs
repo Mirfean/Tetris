@@ -26,12 +26,15 @@ public class GameController : MonoBehaviour
     [SerializeField]
     private GameObject gameOverPanel;
 
+    [SerializeField]
+    private SoundManager soundManager;
+
     // Start is called before the first frame update
     private void Start()
     {
         gameOver = false;
-        gameOverPanel.SetActive(false);
-
+        if (gameOverPanel != null) { gameOverPanel.SetActive(false); }
+        
         // Input init
         controls = new BasicControls();
         controls.Enable();
@@ -39,11 +42,17 @@ public class GameController : MonoBehaviour
         // Prepare all core elements
         gameBoard = GameObject.FindWithTag("Board").GetComponent<Board>();
         gameSpawner = GameObject.FindWithTag("Spawner").GetComponent<Spawner>();
+        soundManager = GameObject.FindObjectOfType<SoundManager>();
+
         gameSpawner.transform.position = VectorF.Round(gameSpawner.transform.position);
 
         verticalSpeed = 0.1f;
         horizontalSpeed = 0.1f;
         autoActiveShapeSpeed = 0.25f;
+
+        if (soundManager.FxEnabled && soundManager.MoveShapeSound) { 
+        }
+        
     }
 
     // Update is called once per frame
@@ -56,6 +65,7 @@ public class GameController : MonoBehaviour
                 activeShape = gameSpawner.SpawnShape();
             }
         }
+        if (!soundManager) { Debug.LogWarning("Sound not working!"); }
 
         //Control
         MovingShapeByPlayer(controls.Base.Movement.ReadValue<Vector2>());
@@ -100,18 +110,25 @@ public class GameController : MonoBehaviour
         if ((md == MoveDirection.LEFT || md == MoveDirection.RIGHT) && nextMoveHorizontal < Time.time)
         {
             nextMoveHorizontal = Time.time + horizontalSpeed;
-            activeShape.MoveShape(md);
-            CheckValidPosition(md);
+            CheckCertainDirection(md);
         }
         if (md == MoveDirection.DOWN && nextMoveVertical < Time.time)
         {
             nextMoveVertical = Time.time + verticalSpeed;
-            activeShape.MoveShape(md);
-            CheckValidPosition(md);
+            CheckCertainDirection(md);
         }
     }
 
-    private void CheckValidPosition(MoveDirection md)
+    private void CheckCertainDirection(MoveDirection md)
+    {
+        activeShape.MoveShape(md);
+        if (CheckValidPosition(md))
+        {
+            AudioSource.PlayClipAtPoint(soundManager.MoveShapeSound, Camera.main.transform.position, soundManager.FxVolume);
+        }
+    }
+
+    private bool CheckValidPosition(MoveDirection md)
     {
         if (!gameBoard.IsValidPosition(activeShape))
         {
@@ -138,8 +155,10 @@ public class GameController : MonoBehaviour
                     activeShape.MoveShape(MoveDirection.LEFT);
                     break;
             }
+            return false;
             
         }
+        return true;
     }
 
     void LandShape()

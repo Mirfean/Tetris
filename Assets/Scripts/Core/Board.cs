@@ -121,6 +121,7 @@ public class Board : MonoBehaviour
 
     public void ClearAllRows()
     {
+        int tetris = 0;
         for (int y = 0; y < m_height; ++y)
         {
             if (IsComplete(y))
@@ -130,8 +131,15 @@ public class Board : MonoBehaviour
                 ShiftRowsDown(y + 1);
 
                 y--;
+
+                tetris++;
             }
 
+        }
+        if (tetris == 4)
+        {
+            SoundManager soundManager = GameObject.FindObjectOfType<SoundManager>();
+            soundManager.PlayTetrisSound();
         }
 
     }

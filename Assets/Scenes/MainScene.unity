@@ -240,6 +240,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameOverPanel: {fileID: 542948037}
+  soundManager: {fileID: 727159164}
 --- !u!4 &115510289
 Transform:
   m_ObjectHideFlags: 0
@@ -254,6 +255,67 @@ Transform:
   m_Father: {fileID: 1471206301}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &422953754 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 857890051541173915, guid: a998045701031634bac3c81c577a3432, type: 3}
+  m_PrefabInstance: {fileID: 753388410}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &422953756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 422953754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 1, g: 1, b: 1, a: 1}
+    m_SelectedColor: {r: 0, g: 0, b: 0, a: 1}
+    m_DisabledColor: {r: 1, g: 1, b: 1, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 766806769}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 727159164}
+        m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
+        m_MethodName: TurnMusic
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &436075265
 GameObject:
   m_ObjectHideFlags: 0
@@ -845,15 +907,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b868c6a1c3c8cc747a5017bb91eaded6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  musicEnabled: 1
+  musicEnabled: 0
   fxEnabled: 1
   musicVolume: 1
   fxVolume: 1
+  bgSound: {fileID: 0}
   clearRowSound: {fileID: 8300000, guid: 701307b8e657be347a2a1e0b0efa353d, type: 3}
-  moveShapeSound: {fileID: 0}
-  dropSound: {fileID: 0}
-  gameOverSound: {fileID: 0}
-  BGSound: {fileID: 8300000, guid: 64d9274a804d5584aa7f99c5c2cea4fb, type: 3}
+  moveShapeSound: {fileID: 8300000, guid: 196760f79a611b34581a02531803cb35, type: 3}
+  dropSound: {fileID: 8300000, guid: 14e300128435b6346bda67b833436e97, type: 3}
+  gameOverSound: {fileID: 8300000, guid: 51f431b83e143204495c3e92f5ccfa73, type: 3}
+  BackgroundSounds:
+  - {fileID: 8300000, guid: 64d9274a804d5584aa7f99c5c2cea4fb, type: 3}
+  - {fileID: 8300000, guid: 39d2ede9acd1e104699db755803e682c, type: 3}
+  - {fileID: 8300000, guid: a2946d071bbacc24e9397a90194e41d4, type: 3}
   musicSource: {fileID: 521858478}
 --- !u!81 &727159165
 AudioListener:
@@ -873,6 +939,14 @@ PrefabInstance:
     - target: {fileID: 857890050671520324, guid: a998045701031634bac3c81c577a3432, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 857890050985192602, guid: a998045701031634bac3c81c577a3432, type: 3}
+      propertyPath: m_Name
+      value: MusicFill
+      objectReference: {fileID: 0}
+    - target: {fileID: 857890051041875891, guid: a998045701031634bac3c81c577a3432, type: 3}
+      propertyPath: m_Name
+      value: MusicBorder
       objectReference: {fileID: 0}
     - target: {fileID: 857890051541173914, guid: a998045701031634bac3c81c577a3432, type: 3}
       propertyPath: m_Pivot.x
@@ -960,7 +1034,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 857890051541173915, guid: a998045701031634bac3c81c577a3432, type: 3}
       propertyPath: m_Name
-      value: IconTextWithBorder (2)
+      value: MusicButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 857890051896644771, guid: a998045701031634bac3c81c577a3432, type: 3}
+      propertyPath: m_Name
+      value: MusicIcon
       objectReference: {fileID: 0}
     - target: {fileID: 857890051896644797, guid: a998045701031634bac3c81c577a3432, type: 3}
       propertyPath: m_Sprite
@@ -973,6 +1051,10 @@ PrefabInstance:
     - target: {fileID: 857890051986309068, guid: a998045701031634bac3c81c577a3432, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 6.899994
+      objectReference: {fileID: 0}
+    - target: {fileID: 857890051986309069, guid: a998045701031634bac3c81c577a3432, type: 3}
+      propertyPath: m_Name
+      value: MusicLabel
       objectReference: {fileID: 0}
     - target: {fileID: 857890051986309071, guid: a998045701031634bac3c81c577a3432, type: 3}
       propertyPath: m_text
@@ -987,6 +1069,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 857890051541173914, guid: a998045701031634bac3c81c577a3432, type: 3}
   m_PrefabInstance: {fileID: 753388410}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &766806769 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 857890051896644797, guid: a998045701031634bac3c81c577a3432, type: 3}
+  m_PrefabInstance: {fileID: 753388410}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &779215631
 GameObject:
   m_ObjectHideFlags: 0

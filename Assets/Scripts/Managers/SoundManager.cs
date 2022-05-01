@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class SoundManager : MonoBehaviour
 {
+    [SerializeField]
     bool musicEnabled;
 
-    [SerializeField]
-    bool MusicEnabled
+    public bool MusicEnabled
     {
         get { return musicEnabled; }
 
@@ -17,7 +17,15 @@ public class SoundManager : MonoBehaviour
             UpdateMusic();
         }
     }
-    
+    public AudioClip BGSound { get => bgSound; set => bgSound = value; }
+    public AudioClip MoveShapeSound { get => moveShapeSound; set => moveShapeSound = value; }
+    public AudioClip DropSound { get => dropSound; set => dropSound = value; }
+    public AudioClip GameOverSound { get => gameOverSound; set => gameOverSound = value; }
+    public AudioClip ClearRowSound { get => clearRowSound; set => clearRowSound = value; }
+    public float FxVolume { get => fxVolume; set => fxVolume = value; }
+    public bool FxEnabled { get => fxEnabled; set => fxEnabled = value; }
+    public AudioClip TetrisSound { get => tetrisSound; set => tetrisSound = value; }
+
     [SerializeField]
     bool fxEnabled = true;
     
@@ -26,6 +34,9 @@ public class SoundManager : MonoBehaviour
     
     [SerializeField]
     float fxVolume = 1.0f;
+
+    [SerializeField]
+    AudioClip bgSound;
 
     [SerializeField]
     AudioClip clearRowSound;
@@ -43,10 +54,10 @@ public class SoundManager : MonoBehaviour
     AudioClip[] BackgroundSounds;
 
     [SerializeField]
-    AudioClip BGSound;
+    AudioSource musicSource;
 
     [SerializeField]
-    AudioSource musicSource;
+    AudioClip tetrisSound;
 
     private void Start()
     {
@@ -97,5 +108,10 @@ public class SoundManager : MonoBehaviour
     public AudioClip GetRandomClip()
     {
         return BackgroundSounds[Random.Range(0, BackgroundSounds.Length)];
+    }
+
+    public void PlayTetrisSound()
+    {
+        AudioSource.PlayClipAtPoint(TetrisSound, Camera.main.transform.position, 1);
     }
 }
