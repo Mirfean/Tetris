@@ -121,6 +121,7 @@ public class Board : MonoBehaviour
 
     public void ClearAllRows()
     {
+        SoundManager soundManager = GameObject.FindObjectOfType<SoundManager>();
         int tetris = 0;
         for (int y = 0; y < m_height; ++y)
         {
@@ -132,14 +133,19 @@ public class Board : MonoBehaviour
 
                 y--;
 
+                soundManager.PlayTetrisSound();
+
                 tetris++;
             }
 
         }
-        if (tetris == 4)
+        if (tetris > 0 && tetris < 4)
         {
-            SoundManager soundManager = GameObject.FindObjectOfType<SoundManager>();
-            soundManager.PlayTetrisSound();
+            soundManager.PlaySound(soundManager.ClearRowSound, soundManager.FxVolume);
+        }
+        else if (tetris == 4)
+        {
+            soundManager.PlaySound(soundManager.TetrisSound, soundManager.FxVolume);
         }
 
     }

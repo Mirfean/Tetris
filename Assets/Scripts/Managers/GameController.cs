@@ -58,21 +58,25 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        if (gameSpawner && !gameOver)
+        if (!gameOver)
         {
-            if (!activeShape)
+            if (gameSpawner && !gameOver)
             {
-                activeShape = gameSpawner.SpawnShape();
+                if (!activeShape)
+                {
+                    activeShape = gameSpawner.SpawnShape();
+                }
             }
+            if (!soundManager) { Debug.LogWarning("Sound not working!"); }
+
+            //Control
+            MovingShapeByPlayer(controls.Base.Movement.ReadValue<Vector2>());
+            //controls.Base.Movement.performed += ctx => MovingShapeByPlayer(ctx.ReadValue<Vector2>());
+            controls.Base.Rotate.performed += _ => activeShape.RotateRight();
+
+            MovingShapeDown();
         }
-        if (!soundManager) { Debug.LogWarning("Sound not working!"); }
-
-        //Control
-        MovingShapeByPlayer(controls.Base.Movement.ReadValue<Vector2>());
-        //controls.Base.Movement.performed += ctx => MovingShapeByPlayer(ctx.ReadValue<Vector2>());
-        controls.Base.Rotate.performed += _ => activeShape.RotateRight();
-
-        MovingShapeDown();
+            
     }
 
     private void MovingShapeByPlayer(Vector2 vector2)
@@ -140,6 +144,8 @@ public class GameController : MonoBehaviour
                         activeShape.MoveShape(MoveDirection.UP);
                         gameOver = true;
                         gameOverPanel.SetActive(true);
+                        soundManager.BGSound = null;
+                        AudioSource.PlayClipAtPoint(soundManager.GameOverSound, Camera.main.transform.position, soundManager.FxVolume);
                         Debug.LogWarning("You lost!");
                     }
                     else
@@ -168,6 +174,10 @@ public class GameController : MonoBehaviour
         activeShape = gameSpawner.SpawnShape();
 
         gameBoard.ClearAllRows();
+        if (soundManager.FxEnabled && soundManager.DropSound)
+        {
+            AudioSource.PlayClipAtPoint(soundManager.DropSound, Camera.main.transform.position, soundManager.FxVolume);
+        }
     }
 
     public void Restart()

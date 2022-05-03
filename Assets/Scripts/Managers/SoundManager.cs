@@ -32,7 +32,7 @@ public class SoundManager : MonoBehaviour
     [SerializeField, Range(0f, 1f)]
     float musicVolume = 1.0f;
     
-    [SerializeField]
+    [SerializeField, Range(0f, 1f)]
     float fxVolume = 1.0f;
 
     [SerializeField]
@@ -113,5 +113,10 @@ public class SoundManager : MonoBehaviour
     public void PlayTetrisSound()
     {
         AudioSource.PlayClipAtPoint(TetrisSound, Camera.main.transform.position, 1);
+    }
+
+    public void PlaySound(AudioClip audioClip, float volume)
+    {
+        AudioSource.PlayClipAtPoint(audioClip, Camera.main.transform.position, volume);
     }
 }

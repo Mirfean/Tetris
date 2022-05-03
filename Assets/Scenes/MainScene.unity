@@ -909,18 +909,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   musicEnabled: 0
   fxEnabled: 1
-  musicVolume: 1
+  musicVolume: 0.1
   fxVolume: 1
   bgSound: {fileID: 0}
-  clearRowSound: {fileID: 8300000, guid: 701307b8e657be347a2a1e0b0efa353d, type: 3}
+  clearRowSound: {fileID: 8300000, guid: 14e300128435b6346bda67b833436e97, type: 3}
   moveShapeSound: {fileID: 8300000, guid: 196760f79a611b34581a02531803cb35, type: 3}
-  dropSound: {fileID: 8300000, guid: 14e300128435b6346bda67b833436e97, type: 3}
+  dropSound: {fileID: 0}
   gameOverSound: {fileID: 8300000, guid: 51f431b83e143204495c3e92f5ccfa73, type: 3}
   BackgroundSounds:
   - {fileID: 8300000, guid: 64d9274a804d5584aa7f99c5c2cea4fb, type: 3}
   - {fileID: 8300000, guid: 39d2ede9acd1e104699db755803e682c, type: 3}
   - {fileID: 8300000, guid: a2946d071bbacc24e9397a90194e41d4, type: 3}
   musicSource: {fileID: 521858478}
+  tetrisSound: {fileID: 8300000, guid: f78f66c1a10b6d04e99bcf962f854432, type: 3}
 --- !u!81 &727159165
 AudioListener:
   m_ObjectHideFlags: 0
