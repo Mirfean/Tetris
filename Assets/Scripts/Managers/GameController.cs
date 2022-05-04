@@ -21,6 +21,8 @@ public class GameController : MonoBehaviour
     private float verticalSpeed;
     private float nextMoveVertical;
 
+    private bool rotateClockwise;
+    
     private bool gameOver;
 
     [SerializeField]
@@ -34,6 +36,8 @@ public class GameController : MonoBehaviour
     {
         gameOver = false;
         if (gameOverPanel != null) { gameOverPanel.SetActive(false); }
+
+        rotateClockwise = true;
         
         // Input init
         controls = new BasicControls();
@@ -72,16 +76,27 @@ public class GameController : MonoBehaviour
             //Control
             MovingShapeByPlayer(controls.Base.Movement.ReadValue<Vector2>());
             //controls.Base.Movement.performed += ctx => MovingShapeByPlayer(ctx.ReadValue<Vector2>());
-            controls.Base.Rotate.performed += _ => activeShape.RotateRight();
+
+            controls.Base.Rotate.performed += _ => RotateShape();
 
             MovingShapeDown();
         }
             
     }
 
+    private void MovingShapeDown()
+    {
+        if (activeShape && autoNextMoveDown<Time.time)
+        {
+            autoNextMoveDown = Time.time + autoActiveShapeSpeed;
+            activeShape.MoveShape(MoveDirection.DOWN);
+            CheckValidPosition(MoveDirection.DOWN);
+        }
+    }
+
     private void MovingShapeByPlayer(Vector2 vector2)
     {
-        
+
         switch (vector2)
         {
             case Vector2 v when v.Equals(Vector2.left):
@@ -97,16 +112,6 @@ public class GameController : MonoBehaviour
                 break;
         }
 
-    }
-
-    private void MovingShapeDown()
-    {
-        if (activeShape && autoNextMoveDown<Time.time)
-        {
-            autoNextMoveDown = Time.time + autoActiveShapeSpeed;
-            activeShape.MoveShape(MoveDirection.DOWN);
-            CheckValidPosition(MoveDirection.DOWN);
-        }
     }
 
     private void MoveAndCheck(MoveDirection md)
@@ -126,12 +131,21 @@ public class GameController : MonoBehaviour
     private void CheckCertainDirection(MoveDirection md)
     {
         activeShape.MoveShape(md);
-        if (CheckValidPosition(md))
+        if (CheckValidPosition(md) && soundManager.FxEnabled)
         {
-            AudioSource.PlayClipAtPoint(soundManager.MoveShapeSound, Camera.main.transform.position, soundManager.FxVolume);
+            AudioSource.PlayClipAtPoint(soundManager.MoveShapeSound, Camera.main.transform.position, soundManager.FxVolume / 10);
+        }
+        else if (soundManager.FxEnabled)
+        {
+            soundManager.PlaySound(soundManager.ErrorSound, soundManager.FxVolume);
         }
     }
 
+    /* Check current shape position after movement
+     * If it's in right position, return TRUE
+     * Shape going down -> land it if it's not over game space, otherwise move it 1 unit up and make game over 
+     * Shape going left/right -> move it in opposite
+     */
     private bool CheckValidPosition(MoveDirection md)
     {
         if (!gameBoard.IsValidPosition(activeShape))
@@ -144,8 +158,10 @@ public class GameController : MonoBehaviour
                         activeShape.MoveShape(MoveDirection.UP);
                         gameOver = true;
                         gameOverPanel.SetActive(true);
-                        soundManager.BGSound = null;
-                        AudioSource.PlayClipAtPoint(soundManager.GameOverSound, Camera.main.transform.position, soundManager.FxVolume);
+                        if (soundManager.FxEnabled)
+                        {
+                            AudioSource.PlayClipAtPoint(soundManager.GameOverSound, Camera.main.transform.position, soundManager.FxVolume);
+                        }
                         Debug.LogWarning("You lost!");
                     }
                     else
@@ -178,6 +194,23 @@ public class GameController : MonoBehaviour
         {
             AudioSource.PlayClipAtPoint(soundManager.DropSound, Camera.main.transform.position, soundManager.FxVolume);
         }
+    }
+
+    public void RotateShape()
+    {
+        if (rotateClockwise)
+        {
+            activeShape.RotateRight();
+        }
+        else
+        {
+            activeShape.RotateLeft();
+        }
+    }
+
+    public void ReverseRotate()
+    {
+        rotateClockwise = !rotateClockwise;
     }
 
     public void Restart()

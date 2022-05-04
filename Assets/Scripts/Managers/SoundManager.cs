@@ -25,6 +25,8 @@ public class SoundManager : MonoBehaviour
     public float FxVolume { get => fxVolume; set => fxVolume = value; }
     public bool FxEnabled { get => fxEnabled; set => fxEnabled = value; }
     public AudioClip TetrisSound { get => tetrisSound; set => tetrisSound = value; }
+    public AudioClip ErrorSound { get => errorSound; set => errorSound = value; }
+    public AudioClip LevelUp { get => levelUp; set => levelUp = value; }
 
     [SerializeField]
     bool fxEnabled = true;
@@ -58,6 +60,12 @@ public class SoundManager : MonoBehaviour
 
     [SerializeField]
     AudioClip tetrisSound;
+
+    [SerializeField]
+    AudioClip errorSound;
+
+    [SerializeField]
+    AudioClip levelUp;
 
     private void Start()
     {
@@ -103,6 +111,11 @@ public class SoundManager : MonoBehaviour
     public void TurnMusic()
     {
         MusicEnabled = !MusicEnabled;
+    }
+
+    public void TurnFx()
+    {
+        FxEnabled = !FxEnabled;
     }
 
     public AudioClip GetRandomClip()

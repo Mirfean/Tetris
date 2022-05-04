@@ -133,19 +133,17 @@ public class Board : MonoBehaviour
 
                 y--;
 
-                soundManager.PlayTetrisSound();
-
                 tetris++;
             }
 
         }
-        if (tetris > 0 && tetris < 4)
+        if (tetris > 0 && tetris < 4 && soundManager.FxEnabled)
         {
             soundManager.PlaySound(soundManager.ClearRowSound, soundManager.FxVolume);
         }
-        else if (tetris == 4)
+        else if (tetris == 4 && soundManager.FxEnabled)
         {
-            soundManager.PlaySound(soundManager.TetrisSound, soundManager.FxVolume);
+            soundManager.PlaySound(soundManager.TetrisSound, 999);
         }
 
     }
