@@ -143,7 +143,7 @@ public class Board : MonoBehaviour
         }
         else if (tetris == 4 && soundManager.FxEnabled)
         {
-            soundManager.PlaySound(soundManager.TetrisSound, 999);
+            soundManager.PlaySound(soundManager.TetrisSound, soundManager.FxVolume);
         }
 
     }

@@ -3,8 +3,12 @@
 Tetris game with additional mechanics
 
 Todo:
+- Levels and lines
 - Sounds
+    - Level up
 - UI
+    - Pause
+    - Score
 - Start screen
 - Leaderboard
 - Effects
@@ -14,10 +18,6 @@ Todo:
 Bugs:
 - Rotating shape close to another shape can cause laying on each other
 - Rotated shape can go under line 0 
-- 
-
-
-
 
 
 Background music
@@ -27,5 +27,7 @@ Happy Adventure by TinyWorlds
 
 FX
 Completion Sound by Brandon Morris
-Kenney.nl
 Realization - Jason Dagenet
+Kenney.nl
+SubspaceAudio
+wobbleboxx
