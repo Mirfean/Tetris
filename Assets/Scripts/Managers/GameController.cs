@@ -31,10 +31,16 @@ public class GameController : MonoBehaviour
     [SerializeField]
     private SoundManager soundManager;
 
+    public bool isPaused;
+
+    public GameObject pausePanel;
+
     // Start is called before the first frame update
     private void Start()
     {
         gameOver = false;
+        isPaused = false;
+
         if (gameOverPanel != null) { gameOverPanel.SetActive(false); }
 
         rotateClockwise = true;
@@ -54,7 +60,11 @@ public class GameController : MonoBehaviour
         horizontalSpeed = 0.1f;
         autoActiveShapeSpeed = 0.25f;
 
-        if (soundManager.FxEnabled && soundManager.MoveShapeSound) { 
+        if (soundManager.MusicSlider.IsActive())
+        {
+            Debug.Log("Disabling Pause");
+            soundManager.SetSliders();
+            pausePanel.SetActive(false);
         }
         
     }
@@ -222,4 +232,18 @@ public class GameController : MonoBehaviour
         SceneManager.LoadScene(0);
     }
 
+    public void TooglePause()
+    {
+        if (gameOver)
+        {
+            return;
+        }
+
+        isPaused = !isPaused;
+
+        if (pausePanel)
+        {
+            pausePanel.SetActive(isPaused);
+        }
+    }
 }

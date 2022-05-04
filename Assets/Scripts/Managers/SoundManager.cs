@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SoundManager : MonoBehaviour
 {
@@ -22,11 +23,20 @@ public class SoundManager : MonoBehaviour
     public AudioClip DropSound { get => dropSound; set => dropSound = value; }
     public AudioClip GameOverSound { get => gameOverSound; set => gameOverSound = value; }
     public AudioClip ClearRowSound { get => clearRowSound; set => clearRowSound = value; }
-    public float FxVolume { get => fxVolume; set => fxVolume = value; }
     public bool FxEnabled { get => fxEnabled; set => fxEnabled = value; }
     public AudioClip TetrisSound { get => tetrisSound; set => tetrisSound = value; }
     public AudioClip ErrorSound { get => errorSound; set => errorSound = value; }
     public AudioClip LevelUp { get => levelUp; set => levelUp = value; }
+    public float MusicVolume { get => musicVolume; 
+        set
+        {
+            musicVolume = value;
+            musicSource.volume = musicVolume;
+        }
+    }
+
+    public float FxVolume { get => fxVolume; set => fxVolume = value; }
+    public AudioSource MusicSource { get => musicSource; set => musicSource = value; }
 
     [SerializeField]
     bool fxEnabled = true;
@@ -67,6 +77,10 @@ public class SoundManager : MonoBehaviour
     [SerializeField]
     AudioClip levelUp;
 
+    public Slider FxSlider;
+
+    public Slider MusicSlider;
+
     private void Start()
     {
         BGSound = GetRandomClip();
@@ -77,6 +91,12 @@ public class SoundManager : MonoBehaviour
     private void Update()
     {
         
+    }
+
+    public void SetSliders()
+    {
+        FxSlider.value = FxVolume;
+        MusicSlider.value = MusicVolume;
     }
 
     public void PlayBackgroundMusic(AudioClip audioClip)
