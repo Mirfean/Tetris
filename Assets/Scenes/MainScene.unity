@@ -5330,7 +5330,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 115510288}
         m_TargetAssemblyTypeName: GameController, Assembly-CSharp
-        m_MethodName: Restart
+        m_MethodName: TooglePause
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

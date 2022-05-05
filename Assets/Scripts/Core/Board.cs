@@ -13,7 +13,7 @@ public class Board : MonoBehaviour
     private int m_width = 10;
 
     [SerializeField]
-    private int m_header = 8;
+    private int m_header = 4;
 
     private Transform[,] m_grid;
 
@@ -21,7 +21,7 @@ public class Board : MonoBehaviour
 
     private void Awake()
     {
-        m_grid = new Transform[m_width, m_height];
+        m_grid = new Transform[m_width, m_height + m_header];
     }
 
     // Start is called before the first frame update

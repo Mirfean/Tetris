@@ -86,9 +86,11 @@ public class GameController : MonoBehaviour
             //Control
             MovingShapeByPlayer(controls.Base.Movement.ReadValue<Vector2>());
             //controls.Base.Movement.performed += ctx => MovingShapeByPlayer(ctx.ReadValue<Vector2>());
-
-            controls.Base.Rotate.performed += _ => RotateShape();
-
+            if (!isPaused)
+            {
+                controls.Base.Rotate.performed += _ => RotateShape();
+                controls.Base.Pause.performed += _ => TooglePause();
+            }
             MovingShapeDown();
         }
             
@@ -106,22 +108,23 @@ public class GameController : MonoBehaviour
 
     private void MovingShapeByPlayer(Vector2 vector2)
     {
-
-        switch (vector2)
+        if (!isPaused) 
         {
-            case Vector2 v when v.Equals(Vector2.left):
-                MoveAndCheck(MoveDirection.LEFT);
-                break;
-            case Vector2 v when v.Equals(Vector2.right):
-                MoveAndCheck(MoveDirection.RIGHT);
-                break;
-            case Vector2 v when v.Equals(Vector2.down):
-                MoveAndCheck(MoveDirection.DOWN);
-                break;
-            default:
-                break;
+            switch (vector2)
+            {
+                case Vector2 v when v.Equals(Vector2.left):
+                    MoveAndCheck(MoveDirection.LEFT);
+                    break;
+                case Vector2 v when v.Equals(Vector2.right):
+                    MoveAndCheck(MoveDirection.RIGHT);
+                    break;
+                case Vector2 v when v.Equals(Vector2.down):
+                    MoveAndCheck(MoveDirection.DOWN);
+                    break;
+                default:
+                    break;
+            }
         }
-
     }
 
     private void MoveAndCheck(MoveDirection md)
@@ -228,6 +231,7 @@ public class GameController : MonoBehaviour
         //TODO:
         //- Save score
 
+        Time.timeScale = 1;
         Debug.Log("Restart");
         SceneManager.LoadScene(0);
     }
@@ -245,5 +249,7 @@ public class GameController : MonoBehaviour
         {
             pausePanel.SetActive(isPaused);
         }
+
+        Time.timeScale = (isPaused ? 0 : 1);
     }
 }
