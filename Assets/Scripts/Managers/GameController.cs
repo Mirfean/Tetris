@@ -185,9 +185,11 @@ public class GameController : MonoBehaviour
                     break;
                 case MoveDirection.LEFT:
                     activeShape.MoveShape(MoveDirection.RIGHT);
+                    CheckValidPosition(md);
                     break;
                 case MoveDirection.RIGHT:
                     activeShape.MoveShape(MoveDirection.LEFT);
+                    CheckValidPosition(md);
                     break;
             }
             return false;
