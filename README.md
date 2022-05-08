@@ -1,14 +1,10 @@
 # Tetris
 
-Tetris game with additional mechanics
+Tetris with additional mechanics
 
 Todo:
-- Levels and lines
 - Sounds
     - Level up
-- UI
-    - Pause
-    - Score
 - Start screen
 - Leaderboard
 - Effects

@@ -119,7 +119,7 @@ public class Board : MonoBehaviour
         }
     }
 
-    public void ClearAllRows()
+    public int ClearAllRows()
     {
         SoundManager soundManager = GameObject.FindObjectOfType<SoundManager>();
         int tetris = 0;
@@ -145,7 +145,7 @@ public class Board : MonoBehaviour
         {
             soundManager.PlaySound(soundManager.TetrisSound, soundManager.FxVolume);
         }
-
+        return tetris;
     }
 
     public bool IsOccupied(int x, int y, Shape shape)

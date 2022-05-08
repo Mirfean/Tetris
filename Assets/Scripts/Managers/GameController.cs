@@ -35,6 +35,8 @@ public class GameController : MonoBehaviour
 
     public GameObject pausePanel;
 
+    public ScoreManager scoreManager;
+
     // Start is called before the first frame update
     private void Start()
     {
@@ -53,6 +55,7 @@ public class GameController : MonoBehaviour
         gameBoard = GameObject.FindWithTag("Board").GetComponent<Board>();
         gameSpawner = GameObject.FindWithTag("Spawner").GetComponent<Spawner>();
         soundManager = GameObject.FindObjectOfType<SoundManager>();
+        scoreManager = GameObject.FindObjectOfType<ScoreManager>();
 
         gameSpawner.transform.position = VectorF.Round(gameSpawner.transform.position);
 
@@ -198,13 +201,20 @@ public class GameController : MonoBehaviour
         return true;
     }
 
+    // Land shape and do all checks linked to it
     void LandShape()
     {
         activeShape.MoveShape(MoveDirection.UP);
         gameBoard.StoreShapeInGrid(activeShape);
         activeShape = gameSpawner.SpawnShape();
 
-        gameBoard.ClearAllRows();
+        int linesCleared = gameBoard.ClearAllRows();
+        int level = scoreManager.Level;
+        scoreManager.SetScoreAndLines(linesCleared);
+        if (level != scoreManager.Level)
+        {
+            autoActiveShapeSpeed -= Mathf.Clamp((((float)scoreManager.Level - 1) * 0.05f),0.05f, 1f);
+        }
         if (soundManager.FxEnabled && soundManager.DropSound)
         {
             AudioSource.PlayClipAtPoint(soundManager.DropSound, Camera.main.transform.position, soundManager.FxVolume);
