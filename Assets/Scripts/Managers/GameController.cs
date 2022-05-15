@@ -37,6 +37,8 @@ public class GameController : MonoBehaviour
 
     public ScoreManager scoreManager;
 
+    GhostShape ghostShape;
+
     // Start is called before the first frame update
     private void Start()
     {
@@ -56,6 +58,7 @@ public class GameController : MonoBehaviour
         gameSpawner = GameObject.FindWithTag("Spawner").GetComponent<Spawner>();
         soundManager = GameObject.FindObjectOfType<SoundManager>();
         scoreManager = GameObject.FindObjectOfType<ScoreManager>();
+        ghostShape = GameObject.FindObjectOfType<GhostShape>();
 
         gameSpawner.transform.position = VectorF.Round(gameSpawner.transform.position);
 
@@ -97,6 +100,11 @@ public class GameController : MonoBehaviour
             MovingShapeDown();
         }
             
+    }
+
+    private void LateUpdate()
+    {
+        ghostShape.ProjectGhost(activeShape, gameBoard);
     }
 
     private void MovingShapeDown()
@@ -183,6 +191,7 @@ public class GameController : MonoBehaviour
                     else
                     {
                         LandShape();
+                        
                     }
                     
                     break;
@@ -213,7 +222,7 @@ public class GameController : MonoBehaviour
         scoreManager.SetScoreAndLines(linesCleared);
         if (level != scoreManager.Level)
         {
-            autoActiveShapeSpeed -= Mathf.Clamp((((float)scoreManager.Level - 1) * 0.05f),0.05f, 1f);
+            autoActiveShapeSpeed -= Mathf.Clamp((((float)scoreManager.Level - 1) * 0.01f),0.01f, 1f);
         }
         if (soundManager.FxEnabled && soundManager.DropSound)
         {
