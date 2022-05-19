@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GhostShape : MonoBehaviour
 {
-    Shape ghostSprite = null;
+    public Shape ghostSprite = null;
     bool hitBottom = false;
     [SerializeField]
     Color color = new Color(1f, 1f, 1f, 0.2f);
@@ -52,15 +52,4 @@ public class GhostShape : MonoBehaviour
         }
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
