@@ -8,6 +8,12 @@ public class buttonHandler : MonoBehaviour
     [SerializeField]
     string buttonType;
 
+    [SerializeField]
+    Sprite mode1;
+
+    [SerializeField]
+    Sprite mode2;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -44,9 +50,15 @@ public class buttonHandler : MonoBehaviour
                     gameObject.GetComponent<Button>().colors = ReverseColor(Color.black);
                 }
                 break;
-            case "Rotate":
-                 gameObject.transform.Find("RotateIcon").Rotate(0f,180f,0f,Space.Self);
-
+            case "PushDown":
+                if (gameObject.transform.Find("PushDownIcon").GetComponent<Image>().sprite == mode1)
+                {
+                    gameObject.transform.Find("PushDownIcon").GetComponent<Image>().sprite = mode2;
+                }
+                else
+                {
+                    gameObject.transform.Find("PushDownIcon").GetComponent<Image>().sprite = mode1;
+                }
                 break;
             default:
                 break;
