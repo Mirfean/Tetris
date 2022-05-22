@@ -94,7 +94,7 @@ public class GameController : MonoBehaviour
             //controls.Base.Movement.performed += ctx => MovingShapeByPlayer(ctx.ReadValue<Vector2>());
             if (!isPaused)
             {
-                controls.Base.Rotate.performed += _ => RotateShape();
+                controls.Base.Rotate.performed += _ => RotateAndCheck();
                 controls.Base.Pause.performed += _ => TooglePause();
             }
             MovingShapeDown();
@@ -235,11 +235,39 @@ public class GameController : MonoBehaviour
         if (rotateClockwise)
         {
             activeShape.RotateRight();
+            if(!gameBoard.IsValidPosition(activeShape))
+            {
+                if (activeShape.transform.position.x < gameBoard.transform.position.x + (gameBoard.Width/2))
+                {
+                    activeShape.MoveShape(MoveDirection.RIGHT);
+                }
+                else
+                {
+                    activeShape.MoveShape(MoveDirection.RIGHT);
+                }
+            }
         }
         else
         {
             activeShape.RotateLeft();
         }
+    }
+
+    private void RotateAndCheck()
+    {
+        activeShape.RotateRight();
+        if (!gameBoard.IsValidPosition(activeShape))
+        {
+            if (activeShape.transform.position.x < gameBoard.transform.position.x + (gameBoard.Width / 2))
+            {
+                CheckValidPosition(MoveDirection.LEFT);
+            }
+            else
+            {
+                CheckValidPosition(MoveDirection.RIGHT);
+            }
+        }
+
     }
 
     public void ReverseRotate()

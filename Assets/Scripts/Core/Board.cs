@@ -19,6 +19,9 @@ public class Board : MonoBehaviour
 
     private Vector3Int modifier;
 
+    public int Height { get => m_height; set => m_height = value; }
+    public int Width { get => m_width; set => m_width = value; }
+
     private void Awake()
     {
         m_grid = new Transform[m_width, m_height + m_header];

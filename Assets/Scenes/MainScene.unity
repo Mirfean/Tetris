@@ -694,6 +694,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buttonType: FX
+  mode1: {fileID: 0}
+  mode2: {fileID: 0}
 --- !u!1 &181098161
 GameObject:
   m_ObjectHideFlags: 0
@@ -1005,6 +1007,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buttonType: BG
+  mode1: {fileID: 0}
+  mode2: {fileID: 0}
 --- !u!1 &436075265
 GameObject:
   m_ObjectHideFlags: 0
@@ -3346,7 +3350,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98aff0826fe1b214d840a7bce4d2b15c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buttonType: Rotate
+  buttonType: PushDown
+  mode1: {fileID: 21300000, guid: 267913610b611a746962389a905f9995, type: 3}
+  mode2: {fileID: 21300000, guid: 2a1420ee1c7c30d45bcd7771ae25b747, type: 3}
 --- !u!114 &1152772286
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4519,11 +4525,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 857890050985192602, guid: a998045701031634bac3c81c577a3432, type: 3}
       propertyPath: m_Name
-      value: RotateFill
+      value: PushDownFill
       objectReference: {fileID: 0}
     - target: {fileID: 857890051041875891, guid: a998045701031634bac3c81c577a3432, type: 3}
       propertyPath: m_Name
-      value: RotateBorder
+      value: PushDownBorder
       objectReference: {fileID: 0}
     - target: {fileID: 857890051541173914, guid: a998045701031634bac3c81c577a3432, type: 3}
       propertyPath: m_Pivot.x
@@ -4611,11 +4617,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 857890051541173915, guid: a998045701031634bac3c81c577a3432, type: 3}
       propertyPath: m_Name
-      value: RotateButton
+      value: PushDownButton
       objectReference: {fileID: 0}
     - target: {fileID: 857890051896644771, guid: a998045701031634bac3c81c577a3432, type: 3}
       propertyPath: m_Name
-      value: RotateIcon
+      value: PushDownIcon
       objectReference: {fileID: 0}
     - target: {fileID: 857890051896644797, guid: a998045701031634bac3c81c577a3432, type: 3}
       propertyPath: m_Sprite
@@ -4631,7 +4637,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 857890051986309069, guid: a998045701031634bac3c81c577a3432, type: 3}
       propertyPath: m_Name
-      value: RotateLabel
+      value: PushDownLabel
       objectReference: {fileID: 0}
     - target: {fileID: 857890051986309071, guid: a998045701031634bac3c81c577a3432, type: 3}
       propertyPath: m_text
