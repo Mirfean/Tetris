@@ -22,6 +22,7 @@ public class GameController : MonoBehaviour
     private float nextMoveVertical;
 
     private bool rotateClockwise;
+    private bool forceDown;
     
     private bool gameOver;
 
@@ -48,6 +49,8 @@ public class GameController : MonoBehaviour
         if (gameOverPanel != null) { gameOverPanel.SetActive(false); }
 
         rotateClockwise = true;
+        forceDown = false;
+        
         
         // Input init
         controls = new BasicControls();
@@ -62,7 +65,7 @@ public class GameController : MonoBehaviour
 
         gameSpawner.transform.position = VectorF.Round(gameSpawner.transform.position);
 
-        verticalSpeed = 0.1f;
+        verticalSpeed = 0.25f;
         horizontalSpeed = 0.1f;
         autoActiveShapeSpeed = 0.25f;
 
@@ -130,7 +133,14 @@ public class GameController : MonoBehaviour
                     MoveAndCheck(MoveDirection.RIGHT);
                     break;
                 case Vector2 v when v.Equals(Vector2.down):
-                    MoveAndCheck(MoveDirection.DOWN);
+                    if (forceDown)
+                    {
+                        ForceLand();
+                    }
+                    else
+                    {
+                        MoveAndCheck(MoveDirection.DOWN);
+                    }
                     break;
                 default:
                     break;
@@ -191,7 +201,6 @@ public class GameController : MonoBehaviour
                     else
                     {
                         LandShape();
-                        
                     }
                     
                     break;
@@ -216,6 +225,10 @@ public class GameController : MonoBehaviour
         activeShape.MoveShape(MoveDirection.UP);
         gameBoard.StoreShapeInGrid(activeShape);
         activeShape = gameSpawner.SpawnShape();
+        if (ghostShape)
+        {
+            ghostShape.Killghost();
+        }
 
         int linesCleared = gameBoard.ClearAllRows();
         int level = scoreManager.Level;
@@ -228,6 +241,33 @@ public class GameController : MonoBehaviour
         {
             AudioSource.PlayClipAtPoint(soundManager.DropSound, Camera.main.transform.position, soundManager.FxVolume);
         }
+    }
+
+    void ForceLand()
+    {
+        if (nextMoveVertical < Time.time)
+        {
+            nextMoveVertical = Time.time + verticalSpeed;
+            activeShape.transform.position = ghostShape.ghostSprite.transform.position;
+            gameBoard.StoreShapeInGrid(activeShape);
+            activeShape = gameSpawner.SpawnShape();
+            if (ghostShape)
+            {
+                ghostShape.Killghost();
+            }
+            int linesCleared = gameBoard.ClearAllRows();
+            int level = scoreManager.Level;
+            scoreManager.SetScoreAndLines(linesCleared);
+            if (level != scoreManager.Level)
+            {
+                autoActiveShapeSpeed -= Mathf.Clamp((((float)scoreManager.Level - 1) * 0.01f), 0.01f, 1f);
+            }
+            if (soundManager.FxEnabled && soundManager.DropSound)
+            {
+                AudioSource.PlayClipAtPoint(soundManager.DropSound, Camera.main.transform.position, soundManager.FxVolume);
+            }
+        }
+       
     }
 
     public void RotateShape()
@@ -272,7 +312,13 @@ public class GameController : MonoBehaviour
 
     public void ReverseRotate()
     {
-        rotateClockwise = !rotateClockwise;
+        //rotateClockwise = !rotateClockwise;
+        forceDown = !forceDown;
+    }
+
+    public void ChangeForceDown()
+    {
+
     }
 
     public void Restart()
