@@ -61,8 +61,10 @@ public class Spawner : MonoBehaviour
             if (queuedShapes[j] == null)
             {
                 queuedShapes[j] = Instantiate(GetRandomShape(), transform.position, Quaternion.identity) as Shape;
-                queuedShapes[j].transform.position = queue[j].position;
-                queuedShapes[j].transform.localScale = new Vector3(10, 10, 10);
+                Vector3 vector3 = Camera.main.ScreenToWorldPoint(queue[j].position);
+                vector3.z = 0;
+                queuedShapes[j].transform.position = vector3;
+                queuedShapes[j].transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
             }
         }
     }
