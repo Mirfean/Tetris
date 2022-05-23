@@ -57,7 +57,7 @@ public class Board : MonoBehaviour
             //Vector2 pos = new Vector2Int((int)s.position.x, (int)s.position.y);
             if (!IsWiththinBoard(pos))
             {
-                Debug.Log($"Not in Board! {pos}");
+                //Debug.Log($"Not in Board! {pos}");
                 return false;
             }
             if (pos.y <= m_emptySprite.position.y + m_height)

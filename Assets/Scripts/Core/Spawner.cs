@@ -5,6 +5,9 @@ public class Spawner : MonoBehaviour
 {
     public Shape[] t_Shapes;
 
+    public Transform[] queue = new Transform[3];
+     
+    Shape[] queuedShapes = new Shape[3];
     private Shape GetRandomShape()
     {
         int i = Random.Range(0, t_Shapes.Length);
@@ -33,13 +36,34 @@ public class Spawner : MonoBehaviour
         }
     }
 
-    // Start is called before the first frame update
-    private void Start()
+    private void Awake()
     {
+        InitQueue();
     }
 
-    // Update is called once per frame
-    private void Update()
+    private void Start()
     {
+        FillQueue();
+    }
+
+    void InitQueue()
+    {
+        for (int i = 0; i < queuedShapes.Length; i++)
+        {
+            queuedShapes[i] = null;
+        }
+    }
+
+    void FillQueue()
+    {
+        for (int j = 0; j < queuedShapes.Length; j++)
+        {
+            if (queuedShapes[j] == null)
+            {
+                queuedShapes[j] = Instantiate(GetRandomShape(), transform.position, Quaternion.identity) as Shape;
+                queuedShapes[j].transform.position = queue[j].position;
+                queuedShapes[j].transform.localScale = new Vector3(10, 10, 10);
+            }
+        }
     }
 }
