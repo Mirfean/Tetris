@@ -24,6 +24,7 @@ public class Spawner : MonoBehaviour
 
     public Shape SpawnShape()
     {
+        //Spawning shape without queue
         //Shape shape = Instantiate(GetRandomShape(), transform.position, Quaternion.identity) as Shape;
 
         Shape shape = GetQueuedShape();
@@ -64,8 +65,8 @@ public class Spawner : MonoBehaviour
             if (queuedShapes[j] == null)
             {
                 queuedShapes[j] = Instantiate(GetRandomShape(), transform.position, Quaternion.identity) as Shape;
-                queuedShapes[j].transform.position = ChangeZ(Camera.main.ScreenToWorldPoint(queue[j].position), 0f);
-                queuedShapes[j].transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+                queuedShapes[j].transform.position = ChangeZ(Camera.main.ScreenToWorldPoint(queue[j].position), 0f) + queuedShapes[j].queueOffset;
+                queuedShapes[j].transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
             }
         }
     }
@@ -82,7 +83,7 @@ public class Spawner : MonoBehaviour
         for (int i = 1; i < queuedShapes.Length; i++)
         {
             queuedShapes[i - 1] = queuedShapes[i];
-            queuedShapes[i - 1].transform.position = ChangeZ(Camera.main.ScreenToWorldPoint(queue[i - 1].position), 0f);
+            queuedShapes[i - 1].transform.position = ChangeZ(Camera.main.ScreenToWorldPoint(queue[i - 1].position), 0f) + queuedShapes[i - 1].queueOffset;
         }
 
         queuedShapes[queuedShapes.Length - 1] = null;

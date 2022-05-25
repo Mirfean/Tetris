@@ -4,6 +4,8 @@ public class Shape : MonoBehaviour
 {
     private bool rotatable = true;
 
+    public Vector3 queueOffset;
+
     private bool Rotatable
     {
         get
