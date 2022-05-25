@@ -24,7 +24,14 @@ public class Spawner : MonoBehaviour
 
     public Shape SpawnShape()
     {
-        Shape shape = Instantiate(GetRandomShape(), transform.position, Quaternion.identity) as Shape;
+        //Shape shape = Instantiate(GetRandomShape(), transform.position, Quaternion.identity) as Shape;
+
+        Shape shape = GetQueuedShape();
+
+        shape.transform.position = transform.position;
+
+        shape.transform.localScale = new Vector3(1f, 1f, 1f);
+
         if (shape)
         {
             return shape;
@@ -41,17 +48,13 @@ public class Spawner : MonoBehaviour
         InitQueue();
     }
 
-    private void Start()
-    {
-        FillQueue();
-    }
-
     void InitQueue()
     {
         for (int i = 0; i < queuedShapes.Length; i++)
         {
             queuedShapes[i] = null;
         }
+        FillQueue();
     }
 
     void FillQueue()
@@ -61,11 +64,38 @@ public class Spawner : MonoBehaviour
             if (queuedShapes[j] == null)
             {
                 queuedShapes[j] = Instantiate(GetRandomShape(), transform.position, Quaternion.identity) as Shape;
-                Vector3 vector3 = Camera.main.ScreenToWorldPoint(queue[j].position);
-                vector3.z = 0;
-                queuedShapes[j].transform.position = vector3;
+                queuedShapes[j].transform.position = ChangeZ(Camera.main.ScreenToWorldPoint(queue[j].position), 0f);
                 queuedShapes[j].transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
             }
         }
+    }
+
+    Shape GetQueuedShape()
+    {
+        Shape firstShape = null;
+
+        if (queuedShapes[0])
+        {
+            firstShape = queuedShapes[0];
+        }
+
+        for (int i = 1; i < queuedShapes.Length; i++)
+        {
+            queuedShapes[i - 1] = queuedShapes[i];
+            queuedShapes[i - 1].transform.position = ChangeZ(Camera.main.ScreenToWorldPoint(queue[i - 1].position), 0f);
+        }
+
+        queuedShapes[queuedShapes.Length - 1] = null;
+
+        FillQueue();
+
+        return firstShape;
+    }
+
+    Vector3 ChangeZ(Vector3 vector3, float position)
+    {
+        Vector3 temp = vector3;
+        temp.z = position;
+        return temp;
     }
 }
