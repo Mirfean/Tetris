@@ -89,6 +89,15 @@ public partial class @BasicControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Hold"",
+                    ""type"": ""Button"",
+                    ""id"": ""06f04437-5fe7-4db6-b088-a8d1ef4ef3b6"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -300,6 +309,17 @@ public partial class @BasicControls : IInputActionCollection2, IDisposable
                     ""action"": ""Pause"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e4a4aaee-7982-446e-990a-d2126e4824f6"",
+                    ""path"": ""<Keyboard>/h"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Hold"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -354,6 +374,7 @@ public partial class @BasicControls : IInputActionCollection2, IDisposable
         m_Base_Cancel = m_Base.FindAction("Cancel", throwIfNotFound: true);
         m_Base_Movement = m_Base.FindAction("Movement", throwIfNotFound: true);
         m_Base_Pause = m_Base.FindAction("Pause", throwIfNotFound: true);
+        m_Base_Hold = m_Base.FindAction("Hold", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -420,6 +441,7 @@ public partial class @BasicControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_Base_Cancel;
     private readonly InputAction m_Base_Movement;
     private readonly InputAction m_Base_Pause;
+    private readonly InputAction m_Base_Hold;
     public struct BaseActions
     {
         private @BasicControls m_Wrapper;
@@ -431,6 +453,7 @@ public partial class @BasicControls : IInputActionCollection2, IDisposable
         public InputAction @Cancel => m_Wrapper.m_Base_Cancel;
         public InputAction @Movement => m_Wrapper.m_Base_Movement;
         public InputAction @Pause => m_Wrapper.m_Base_Pause;
+        public InputAction @Hold => m_Wrapper.m_Base_Hold;
         public InputActionMap Get() { return m_Wrapper.m_Base; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -461,6 +484,9 @@ public partial class @BasicControls : IInputActionCollection2, IDisposable
                 @Pause.started -= m_Wrapper.m_BaseActionsCallbackInterface.OnPause;
                 @Pause.performed -= m_Wrapper.m_BaseActionsCallbackInterface.OnPause;
                 @Pause.canceled -= m_Wrapper.m_BaseActionsCallbackInterface.OnPause;
+                @Hold.started -= m_Wrapper.m_BaseActionsCallbackInterface.OnHold;
+                @Hold.performed -= m_Wrapper.m_BaseActionsCallbackInterface.OnHold;
+                @Hold.canceled -= m_Wrapper.m_BaseActionsCallbackInterface.OnHold;
             }
             m_Wrapper.m_BaseActionsCallbackInterface = instance;
             if (instance != null)
@@ -486,6 +512,9 @@ public partial class @BasicControls : IInputActionCollection2, IDisposable
                 @Pause.started += instance.OnPause;
                 @Pause.performed += instance.OnPause;
                 @Pause.canceled += instance.OnPause;
+                @Hold.started += instance.OnHold;
+                @Hold.performed += instance.OnHold;
+                @Hold.canceled += instance.OnHold;
             }
         }
     }
@@ -526,5 +555,6 @@ public partial class @BasicControls : IInputActionCollection2, IDisposable
         void OnCancel(InputAction.CallbackContext context);
         void OnMovement(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
+        void OnHold(InputAction.CallbackContext context);
     }
 }

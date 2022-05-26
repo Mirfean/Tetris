@@ -68,7 +68,7 @@ public class GameController : MonoBehaviour
 
         gameSpawner.transform.position = VectorF.Round(gameSpawner.transform.position);
 
-        verticalSpeed = 0.25f;
+        verticalSpeed = 0.05f;
         horizontalSpeed = 0.1f;
         autoActiveShapeSpeed = 0.25f;
 
@@ -95,13 +95,15 @@ public class GameController : MonoBehaviour
             }
             if (!soundManager) { Debug.LogWarning("Sound not working!"); }
 
-            //Control
-            MovingShapeByPlayer(controls.Base.Movement.ReadValue<Vector2>());
+            
             //controls.Base.Movement.performed += ctx => MovingShapeByPlayer(ctx.ReadValue<Vector2>());
             if (!isPaused)
             {
+                //Control
+                MovingShapeByPlayer(controls.Base.Movement.ReadValue<Vector2>());
                 controls.Base.Rotate.performed += _ => RotateAndCheck();
                 controls.Base.Pause.performed += _ => TooglePause();
+                controls.Base.Hold.performed += _ => Hold();
             }
             MovingShapeDown();
         }
@@ -267,6 +269,7 @@ public class GameController : MonoBehaviour
         
     }
 
+    //Obsolete method
     public void RotateShape()
     {
         if (rotateClockwise)
@@ -320,9 +323,6 @@ public class GameController : MonoBehaviour
 
     public void Restart()
     {
-        //TODO:
-        //- Save score
-
         Time.timeScale = 1;
         Debug.Log("Restart");
         SceneManager.LoadScene(0);
@@ -348,34 +348,31 @@ public class GameController : MonoBehaviour
 
     public void Hold()
     {
-        if (!holder.heldShape)
+        if (!gameOver)
         {
-            holder.Catch(activeShape);
-            activeShape = gameSpawner.SpawnShape();
+            if (!holder.heldShape)
+            {
+                holder.Catch(activeShape);
+                activeShape = gameSpawner.SpawnShape();
+            }
+
+            else if (holder.canRelease)
+            {
+                Shape temp = activeShape;
+                activeShape = holder.Release();
+                activeShape.transform.position = gameSpawner.transform.position;
+                holder.Catch(temp);
+            }
+            else
+            {
+                Debug.LogWarning("HOLDER WARNING! Wait for cool down!");
+            }
+
+            if (ghostShape)
+            {
+                ghostShape.Killghost();
+            }
         }
-
-        else if (holder.canRelease)
-        {
-            Shape temp = activeShape;
-            activeShape = holder.Release();
-            activeShape.transform.position = gameSpawner.transform.position;
-            holder.Catch(temp);
-        }
-        else
-        {
-            Debug.LogWarning("HOLDER WARNING! Wait for cool down!");
-        }
-
-        if (ghostShape)
-        {
-            ghostShape.Killghost();
-        }
-
-        
-
-        
-
-
     }
 
 

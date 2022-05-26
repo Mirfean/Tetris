@@ -4292,6 +4292,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   holderSpace: {fileID: 414931141}
   heldShape: {fileID: 0}
+  canRelease: 0
 --- !u!114 &1345695665
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5067,7 +5068,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ghostSprite: {fileID: 0}
-  color: {r: 1, g: 1, b: 1, a: 0.49019608}
+  color: {r: 0.3773585, g: 0.3773585, b: 0.3773585, a: 0.49019608}
 --- !u!4 &1618429224
 Transform:
   m_ObjectHideFlags: 0
