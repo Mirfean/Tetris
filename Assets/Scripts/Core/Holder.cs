@@ -7,6 +7,7 @@ public class Holder : MonoBehaviour
     public Transform holderSpace;
     public Shape heldShape = null;
     float scale = 0.4f;
+    public bool canRelease = false;
 
     // Start is called before the first frame update
     void Start()
@@ -24,7 +25,7 @@ public class Holder : MonoBehaviour
     {
         if (heldShape)
         {
-
+            Debug.LogWarning("Release a shape before trying to hold!");
             return;
         }
         
@@ -36,8 +37,26 @@ public class Holder : MonoBehaviour
 
         if (holderSpace)
         {
-            //shape.transform.position = holderSpace.position + shape.
+            shape.transform.position = Spawner.ChangeZ(Camera.main.ScreenToWorldPoint(holderSpace.position), 0f) + shape.queueOffset;
+            shape.transform.localScale = new Vector3(scale, scale, scale);
+            heldShape = shape;
+            canRelease = false;
         }
+        else
+        {
+            Debug.LogWarning("Holder has no transform assigned!");
+        }
+    }
+
+    public Shape Release()
+    {
+        heldShape.transform.localScale = Vector3.one;
+        Shape shape = heldShape;
+        heldShape = null;
+        canRelease = false;    
+        
+        return shape;
+            
     }
 
 

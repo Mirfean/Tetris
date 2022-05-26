@@ -8,6 +8,9 @@ public class Spawner : MonoBehaviour
     public Transform[] queue = new Transform[3];
      
     Shape[] queuedShapes = new Shape[3];
+
+    Vector3 queueScale = new Vector3(0.5f, 0.5f, 0.5f);
+
     private Shape GetRandomShape()
     {
         int i = Random.Range(0, t_Shapes.Length);
@@ -66,7 +69,7 @@ public class Spawner : MonoBehaviour
             {
                 queuedShapes[j] = Instantiate(GetRandomShape(), transform.position, Quaternion.identity) as Shape;
                 queuedShapes[j].transform.position = ChangeZ(Camera.main.ScreenToWorldPoint(queue[j].position), 0f) + queuedShapes[j].queueOffset;
-                queuedShapes[j].transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
+                queuedShapes[j].transform.localScale = queueScale;
             }
         }
     }
@@ -93,7 +96,7 @@ public class Spawner : MonoBehaviour
         return firstShape;
     }
 
-    Vector3 ChangeZ(Vector3 vector3, float position)
+    public static Vector3 ChangeZ(Vector3 vector3, float position)
     {
         Vector3 temp = vector3;
         temp.z = position;

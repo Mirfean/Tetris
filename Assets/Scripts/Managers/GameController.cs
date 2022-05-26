@@ -40,6 +40,8 @@ public class GameController : MonoBehaviour
 
     GhostShape ghostShape;
 
+    Holder holder;
+
     // Start is called before the first frame update
     private void Start()
     {
@@ -62,6 +64,7 @@ public class GameController : MonoBehaviour
         soundManager = GameObject.FindObjectOfType<SoundManager>();
         scoreManager = GameObject.FindObjectOfType<ScoreManager>();
         ghostShape = GameObject.FindObjectOfType<GhostShape>();
+        holder = GameObject.FindObjectOfType<Holder>();
 
         gameSpawner.transform.position = VectorF.Round(gameSpawner.transform.position);
 
@@ -224,23 +227,7 @@ public class GameController : MonoBehaviour
     {
         activeShape.MoveShape(MoveDirection.UP);
         gameBoard.StoreShapeInGrid(activeShape);
-        activeShape = gameSpawner.SpawnShape();
-        if (ghostShape)
-        {
-            ghostShape.Killghost();
-        }
-
-        int linesCleared = gameBoard.ClearAllRows();
-        int level = scoreManager.Level;
-        scoreManager.SetScoreAndLines(linesCleared);
-        if (level != scoreManager.Level)
-        {
-            autoActiveShapeSpeed -= Mathf.Clamp((((float)scoreManager.Level - 1) * 0.01f),0.01f, 1f);
-        }
-        if (soundManager.FxEnabled && soundManager.DropSound)
-        {
-            AudioSource.PlayClipAtPoint(soundManager.DropSound, Camera.main.transform.position, soundManager.FxVolume);
-        }
+        LandExecute();
     }
 
     void ForceLand()
@@ -249,25 +236,35 @@ public class GameController : MonoBehaviour
         {
             nextMoveVertical = Time.time + verticalSpeed;
             activeShape.transform.position = ghostShape.ghostSprite.transform.position;
-            gameBoard.StoreShapeInGrid(activeShape);
-            activeShape = gameSpawner.SpawnShape();
-            if (ghostShape)
-            {
-                ghostShape.Killghost();
-            }
-            int linesCleared = gameBoard.ClearAllRows();
-            int level = scoreManager.Level;
-            scoreManager.SetScoreAndLines(linesCleared);
-            if (level != scoreManager.Level)
-            {
-                autoActiveShapeSpeed -= Mathf.Clamp((((float)scoreManager.Level - 1) * 0.01f), 0.01f, 1f);
-            }
-            if (soundManager.FxEnabled && soundManager.DropSound)
-            {
-                AudioSource.PlayClipAtPoint(soundManager.DropSound, Camera.main.transform.position, soundManager.FxVolume);
-            }
+            LandExecute();
         }
        
+    }
+
+    void LandExecute()
+    {
+        gameBoard.StoreShapeInGrid(activeShape);
+        activeShape = gameSpawner.SpawnShape();
+        if (ghostShape)
+        {
+            ghostShape.Killghost();
+        }
+        int linesCleared = gameBoard.ClearAllRows();
+        int level = scoreManager.Level;
+        scoreManager.SetScoreAndLines(linesCleared);
+        if (level != scoreManager.Level)
+        {
+            autoActiveShapeSpeed -= Mathf.Clamp((((float)scoreManager.Level - 1) * 0.01f), 0.01f, 1f);
+        }
+        if (soundManager.FxEnabled && soundManager.DropSound)
+        {
+            AudioSource.PlayClipAtPoint(soundManager.DropSound, Camera.main.transform.position, soundManager.FxVolume);
+        }
+        if (holder)
+        {
+            holder.canRelease = true;
+        }
+        
     }
 
     public void RotateShape()
@@ -347,4 +344,40 @@ public class GameController : MonoBehaviour
 
         Time.timeScale = (isPaused ? 0 : 1);
     }
+
+
+    public void Hold()
+    {
+        if (!holder.heldShape)
+        {
+            holder.Catch(activeShape);
+            activeShape = gameSpawner.SpawnShape();
+        }
+
+        else if (holder.canRelease)
+        {
+            Shape temp = activeShape;
+            activeShape = holder.Release();
+            activeShape.transform.position = gameSpawner.transform.position;
+            holder.Catch(temp);
+        }
+        else
+        {
+            Debug.LogWarning("HOLDER WARNING! Wait for cool down!");
+        }
+
+        if (ghostShape)
+        {
+            ghostShape.Killghost();
+        }
+
+        
+
+        
+
+
+    }
+
+
+
 }
