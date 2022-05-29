@@ -3,17 +3,15 @@
 Tetris with additional mechanics
 
 Todo:
-- Sounds
-    - Level up
 - Start screen
+- Mobile version
 - Leaderboard
 - Effects
-- Mobile version
+- 
 
 
 Bugs:
-- Rotating shape close to another shape can cause laying on each other
-- Rotated shape can go under line 0 
+- Music and Fx buttons changes colors without a reason after click it once
 
 
 Background music
