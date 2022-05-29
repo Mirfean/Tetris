@@ -4,7 +4,7 @@ using UnityEngine;
 public class Board : MonoBehaviour
 {
     [SerializeField]
-    private Transform m_emptySprite;
+    private Transform emptySprite;
 
     [SerializeField]
     private int m_height = 20;
@@ -18,6 +18,8 @@ public class Board : MonoBehaviour
     private Transform[,] m_grid;
 
     private Vector3Int modifier;
+
+    private Dictionary<string, Vector3> corners;
 
     public int Height { get => m_height; set => m_height = value; }
     public int Width { get => m_width; set => m_width = value; }
@@ -33,6 +35,7 @@ public class Board : MonoBehaviour
         DrawEmptyBoard();
         modifier = getModifier();
         Debug.Log("Modifier " + modifier);
+        
     }
 
     // Update is called once per frame
@@ -44,9 +47,9 @@ public class Board : MonoBehaviour
     bool IsWiththinBoard(Vector3 v)
     {
         return (
-            v.x >= m_emptySprite.position.x &&
-            v.x < m_width + m_emptySprite.position.x &&
-            v.y >= m_emptySprite.position.y);
+            v.x >= emptySprite.position.x &&
+            v.x < m_width + emptySprite.position.x &&
+            v.y >= emptySprite.position.y);
     }
 
     public bool IsValidPosition(Shape shape)
@@ -60,11 +63,11 @@ public class Board : MonoBehaviour
                 //Debug.Log($"Not in Board! {pos}");
                 return false;
             }
-            if (pos.y <= m_emptySprite.position.y + m_height)
+            if (pos.y <= emptySprite.position.y + m_height)
             {
                 if (IsOccupied((int)pos.x, (int)pos.y, shape))
                 {
-                    Debug.Log($"Occupied! {pos.x}, {pos.y}");
+                    //Debug.Log($"Occupied! {pos.x}, {pos.y}");
                     return false;
                 }
             }
@@ -159,7 +162,7 @@ public class Board : MonoBehaviour
         }
         catch
         {
-            if (y <= m_emptySprite.position.y + m_height + 4)
+            if (y <= emptySprite.position.y + m_height + 4)
             {
                 return false;
             }
@@ -181,7 +184,7 @@ public class Board : MonoBehaviour
                 {
                     continue;
                 }
-                Transform clone = Instantiate(m_emptySprite, new Vector3(x + m_emptySprite.position.x, y + m_emptySprite.position.y, 0), Quaternion.identity) as Transform;
+                Transform clone = Instantiate(emptySprite, new Vector3(x + emptySprite.position.x, y + emptySprite.position.y, 0), Quaternion.identity) as Transform;
                 clone.name = $"Board Space {x} {y}";
                 clone.transform.parent = transform;
             }
@@ -201,7 +204,7 @@ public class Board : MonoBehaviour
                 foreach (Transform child in shape.transform)
                 {
                     Vector2 pos = VectorF.Round(child.position);
-                    Debug.Log($"Filling {pos.x} {pos.y}");
+                    //Debug.Log($"Filling {pos.x} {pos.y}");
                     m_grid[(int)pos.x, (int)pos.y] = child;
                 }
             }
@@ -248,7 +251,23 @@ public class Board : MonoBehaviour
 
     Vector3Int getModifier()
     {
-        return new Vector3Int((int)m_emptySprite.position.x, (int)m_emptySprite.position.y, (int)m_emptySprite.position.z);
+        return new Vector3Int((int)emptySprite.position.x, (int)emptySprite.position.y, (int)emptySprite.position.z);
     }
 
+    public Vector3 getCorner(Corner corner)
+    {
+        switch (corner)
+        {
+            case Corner.TopLeft:
+                return emptySprite.position + new Vector3(0, Height, 0);
+            case Corner.TopRight:
+                return emptySprite.position + new Vector3(Width, Height, 0);
+            case Corner.BotLeft:
+                return emptySprite.position;
+            case Corner.BotRight:
+                return emptySprite.position + new Vector3(Width, 0, 0);
+            default:
+                return new Vector3();
+        }
+    } 
 }

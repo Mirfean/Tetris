@@ -93,7 +93,16 @@ public partial class @BasicControls : IInputActionCollection2, IDisposable
                 {
                     ""name"": ""Hold"",
                     ""type"": ""Button"",
-                    ""id"": ""06f04437-5fe7-4db6-b088-a8d1ef4ef3b6"",
+                    ""id"": ""f6479649-b932-4080-890c-f28c3505638a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""TouchInput"",
+                    ""type"": ""Button"",
+                    ""id"": ""917530cd-11d8-4405-ae73-b3fd69995424"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -269,7 +278,7 @@ public partial class @BasicControls : IInputActionCollection2, IDisposable
                 {
                     ""name"": ""down"",
                     ""id"": ""b35d94d1-93bb-4aef-9e18-14acb65bbe40"",
-                    ""path"": ""<Touchscreen>/position/y"",
+                    ""path"": """",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Touchscreen"",
@@ -312,12 +321,91 @@ public partial class @BasicControls : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""e4a4aaee-7982-446e-990a-d2126e4824f6"",
+                    ""id"": ""52f83c36-1259-422a-81ba-e08a8dbd31c0"",
                     ""path"": ""<Keyboard>/h"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""KeyboardMouse"",
                     ""action"": ""Hold"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""49684750-d811-40c9-8b6b-227e3479edc3"",
+                    ""path"": ""<Touchscreen>/primaryTouch/press"",
+                    ""interactions"": ""Press(behavior=2)"",
+                    ""processors"": """",
+                    ""groups"": ""Touchscreen"",
+                    ""action"": ""TouchInput"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""Touch"",
+            ""id"": ""6369cd70-3210-4e20-9e30-d23e61dd3bb0"",
+            ""actions"": [
+                {
+                    ""name"": ""TouchPress"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""98b59135-d6b7-41af-8337-d5419534750a"",
+                    ""expectedControlType"": ""Vector3"",
+                    ""processors"": """",
+                    ""interactions"": ""Press"",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""TouchPosition"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""f1ffcd1f-7a0f-46f7-b9ce-06d13261985c"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Rotate"",
+                    ""type"": ""Button"",
+                    ""id"": ""250c7a88-8f60-4d08-849e-062b5bbdf4de"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""539e871f-7679-4d8d-aac5-4e59f52cc198"",
+                    ""path"": ""<Touchscreen>/primaryTouch/press"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Touchscreen"",
+                    ""action"": ""TouchPress"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""45a1312f-00bb-4018-9466-d3969d4ab03c"",
+                    ""path"": ""<Touchscreen>/primaryTouch/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Touchscreen"",
+                    ""action"": ""TouchPosition"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d884f9ff-2fdf-4dcf-83b2-ba98b590e178"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Touchscreen"",
+                    ""action"": ""Rotate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -375,6 +463,12 @@ public partial class @BasicControls : IInputActionCollection2, IDisposable
         m_Base_Movement = m_Base.FindAction("Movement", throwIfNotFound: true);
         m_Base_Pause = m_Base.FindAction("Pause", throwIfNotFound: true);
         m_Base_Hold = m_Base.FindAction("Hold", throwIfNotFound: true);
+        m_Base_TouchInput = m_Base.FindAction("TouchInput", throwIfNotFound: true);
+        // Touch
+        m_Touch = asset.FindActionMap("Touch", throwIfNotFound: true);
+        m_Touch_TouchPress = m_Touch.FindAction("TouchPress", throwIfNotFound: true);
+        m_Touch_TouchPosition = m_Touch.FindAction("TouchPosition", throwIfNotFound: true);
+        m_Touch_Rotate = m_Touch.FindAction("Rotate", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -442,6 +536,7 @@ public partial class @BasicControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_Base_Movement;
     private readonly InputAction m_Base_Pause;
     private readonly InputAction m_Base_Hold;
+    private readonly InputAction m_Base_TouchInput;
     public struct BaseActions
     {
         private @BasicControls m_Wrapper;
@@ -454,6 +549,7 @@ public partial class @BasicControls : IInputActionCollection2, IDisposable
         public InputAction @Movement => m_Wrapper.m_Base_Movement;
         public InputAction @Pause => m_Wrapper.m_Base_Pause;
         public InputAction @Hold => m_Wrapper.m_Base_Hold;
+        public InputAction @TouchInput => m_Wrapper.m_Base_TouchInput;
         public InputActionMap Get() { return m_Wrapper.m_Base; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -487,6 +583,9 @@ public partial class @BasicControls : IInputActionCollection2, IDisposable
                 @Hold.started -= m_Wrapper.m_BaseActionsCallbackInterface.OnHold;
                 @Hold.performed -= m_Wrapper.m_BaseActionsCallbackInterface.OnHold;
                 @Hold.canceled -= m_Wrapper.m_BaseActionsCallbackInterface.OnHold;
+                @TouchInput.started -= m_Wrapper.m_BaseActionsCallbackInterface.OnTouchInput;
+                @TouchInput.performed -= m_Wrapper.m_BaseActionsCallbackInterface.OnTouchInput;
+                @TouchInput.canceled -= m_Wrapper.m_BaseActionsCallbackInterface.OnTouchInput;
             }
             m_Wrapper.m_BaseActionsCallbackInterface = instance;
             if (instance != null)
@@ -515,10 +614,62 @@ public partial class @BasicControls : IInputActionCollection2, IDisposable
                 @Hold.started += instance.OnHold;
                 @Hold.performed += instance.OnHold;
                 @Hold.canceled += instance.OnHold;
+                @TouchInput.started += instance.OnTouchInput;
+                @TouchInput.performed += instance.OnTouchInput;
+                @TouchInput.canceled += instance.OnTouchInput;
             }
         }
     }
     public BaseActions @Base => new BaseActions(this);
+
+    // Touch
+    private readonly InputActionMap m_Touch;
+    private ITouchActions m_TouchActionsCallbackInterface;
+    private readonly InputAction m_Touch_TouchPress;
+    private readonly InputAction m_Touch_TouchPosition;
+    private readonly InputAction m_Touch_Rotate;
+    public struct TouchActions
+    {
+        private @BasicControls m_Wrapper;
+        public TouchActions(@BasicControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @TouchPress => m_Wrapper.m_Touch_TouchPress;
+        public InputAction @TouchPosition => m_Wrapper.m_Touch_TouchPosition;
+        public InputAction @Rotate => m_Wrapper.m_Touch_Rotate;
+        public InputActionMap Get() { return m_Wrapper.m_Touch; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(TouchActions set) { return set.Get(); }
+        public void SetCallbacks(ITouchActions instance)
+        {
+            if (m_Wrapper.m_TouchActionsCallbackInterface != null)
+            {
+                @TouchPress.started -= m_Wrapper.m_TouchActionsCallbackInterface.OnTouchPress;
+                @TouchPress.performed -= m_Wrapper.m_TouchActionsCallbackInterface.OnTouchPress;
+                @TouchPress.canceled -= m_Wrapper.m_TouchActionsCallbackInterface.OnTouchPress;
+                @TouchPosition.started -= m_Wrapper.m_TouchActionsCallbackInterface.OnTouchPosition;
+                @TouchPosition.performed -= m_Wrapper.m_TouchActionsCallbackInterface.OnTouchPosition;
+                @TouchPosition.canceled -= m_Wrapper.m_TouchActionsCallbackInterface.OnTouchPosition;
+                @Rotate.started -= m_Wrapper.m_TouchActionsCallbackInterface.OnRotate;
+                @Rotate.performed -= m_Wrapper.m_TouchActionsCallbackInterface.OnRotate;
+                @Rotate.canceled -= m_Wrapper.m_TouchActionsCallbackInterface.OnRotate;
+            }
+            m_Wrapper.m_TouchActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @TouchPress.started += instance.OnTouchPress;
+                @TouchPress.performed += instance.OnTouchPress;
+                @TouchPress.canceled += instance.OnTouchPress;
+                @TouchPosition.started += instance.OnTouchPosition;
+                @TouchPosition.performed += instance.OnTouchPosition;
+                @TouchPosition.canceled += instance.OnTouchPosition;
+                @Rotate.started += instance.OnRotate;
+                @Rotate.performed += instance.OnRotate;
+                @Rotate.canceled += instance.OnRotate;
+            }
+        }
+    }
+    public TouchActions @Touch => new TouchActions(this);
     private int m_KeyboardMouseSchemeIndex = -1;
     public InputControlScheme KeyboardMouseScheme
     {
@@ -556,5 +707,12 @@ public partial class @BasicControls : IInputActionCollection2, IDisposable
         void OnMovement(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
         void OnHold(InputAction.CallbackContext context);
+        void OnTouchInput(InputAction.CallbackContext context);
+    }
+    public interface ITouchActions
+    {
+        void OnTouchPress(InputAction.CallbackContext context);
+        void OnTouchPosition(InputAction.CallbackContext context);
+        void OnRotate(InputAction.CallbackContext context);
     }
 }

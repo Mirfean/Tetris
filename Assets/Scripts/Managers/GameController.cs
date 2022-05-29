@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
@@ -42,6 +43,8 @@ public class GameController : MonoBehaviour
 
     Holder holder;
 
+
+
     // Start is called before the first frame update
     private void Start()
     {
@@ -57,6 +60,7 @@ public class GameController : MonoBehaviour
         // Input init
         controls = new BasicControls();
         controls.Enable();
+
 
         // Prepare all core elements
         gameBoard = GameObject.FindWithTag("Board").GetComponent<Board>();
@@ -78,7 +82,7 @@ public class GameController : MonoBehaviour
             soundManager.SetSliders();
             pausePanel.SetActive(false);
         }
-        
+
     }
 
     // Update is called once per frame
@@ -95,19 +99,22 @@ public class GameController : MonoBehaviour
             }
             if (!soundManager) { Debug.LogWarning("Sound not working!"); }
 
-            
             //controls.Base.Movement.performed += ctx => MovingShapeByPlayer(ctx.ReadValue<Vector2>());
             if (!isPaused)
             {
-                //Control
+                //Control PC
                 MovingShapeByPlayer(controls.Base.Movement.ReadValue<Vector2>());
                 controls.Base.Rotate.performed += _ => RotateAndCheck();
                 controls.Base.Pause.performed += _ => TooglePause();
                 controls.Base.Hold.performed += _ => Hold();
+
+                controls.Touch.TouchPress.started += ctx => MovingShapeByTouch(ctx);
+                
+                
             }
             MovingShapeDown();
         }
-            
+
     }
 
     private void LateUpdate()
@@ -151,6 +158,22 @@ public class GameController : MonoBehaviour
                     break;
             }
         }
+    }
+
+    private void MovingShapeByTouch(InputAction.CallbackContext context)
+    {
+        if (TouchWithin())
+        {
+            Debug.Log("Touch");
+            float diff = Camera.main.ScreenToWorldPoint(controls.Touch.TouchPosition.ReadValue<Vector2>()).x - activeShape.transform.position.x;
+            if (Mathf.Abs(diff) > 0.5f)
+            {
+                if (diff > 0) MoveAndCheck(MoveDirection.RIGHT);
+                else MoveAndCheck(MoveDirection.LEFT);
+            }
+            
+        }
+        //if (activeShape.transform.position.x < )
     }
 
     private void MoveAndCheck(MoveDirection md)
@@ -375,6 +398,10 @@ public class GameController : MonoBehaviour
         }
     }
 
-
+    private bool TouchWithin()
+    {
+        return controls.Touch.TouchPosition.ReadValue<Vector2>().x >= gameBoard.getCorner(Corner.BotLeft).x - 0.5f &&
+            controls.Touch.TouchPosition.ReadValue<Vector2>().x >= gameBoard.getCorner(Corner.TopRight).x + 0.5f;
+    }
 
 }

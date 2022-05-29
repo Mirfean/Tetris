@@ -5,3 +5,11 @@ public enum MoveDirection
     DOWN,
     UP
 }
+
+public enum Corner
+{
+    BotLeft,
+    BotRight,
+    TopLeft,
+    TopRight
+}
