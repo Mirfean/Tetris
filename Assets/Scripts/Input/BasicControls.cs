@@ -349,12 +349,12 @@ public partial class @BasicControls : IInputActionCollection2, IDisposable
             ""actions"": [
                 {
                     ""name"": ""TouchPress"",
-                    ""type"": ""PassThrough"",
+                    ""type"": ""Value"",
                     ""id"": ""98b59135-d6b7-41af-8337-d5419534750a"",
                     ""expectedControlType"": ""Vector3"",
                     ""processors"": """",
-                    ""interactions"": ""Press"",
-                    ""initialStateCheck"": false
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 },
                 {
                     ""name"": ""TouchPosition"",

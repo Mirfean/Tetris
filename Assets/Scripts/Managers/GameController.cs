@@ -27,6 +27,9 @@ public class GameController : MonoBehaviour
     
     private bool gameOver;
 
+    private bool touchInProgress = false;
+    private MoveDirection lastMove;
+
     [SerializeField]
     private GameObject gameOverPanel;
 
@@ -42,6 +45,8 @@ public class GameController : MonoBehaviour
     GhostShape ghostShape;
 
     Holder holder;
+
+    public bool TouchInProgress { get => touchInProgress; set => touchInProgress = value; }
 
 
 
@@ -108,9 +113,14 @@ public class GameController : MonoBehaviour
                 controls.Base.Pause.performed += _ => TooglePause();
                 controls.Base.Hold.performed += _ => Hold();
 
-                controls.Touch.TouchPress.started += ctx => MovingShapeByTouch(ctx);
-                
-                
+                controls.Touch.TouchPress.started += _ => MovingShapeByTouch();
+                controls.Touch.TouchPress.canceled += _ => TouchInProgress = false;
+
+                if (TouchInProgress)
+                {
+                    MovingShapeByTouch();
+                }
+
             }
             MovingShapeDown();
         }
@@ -160,17 +170,43 @@ public class GameController : MonoBehaviour
         }
     }
 
-    private void MovingShapeByTouch(InputAction.CallbackContext context)
+    private void MovingShapeByTouch()
     {
         if (TouchWithin())
         {
-            Debug.Log("Touch");
             float diff = Camera.main.ScreenToWorldPoint(controls.Touch.TouchPosition.ReadValue<Vector2>()).x - activeShape.transform.position.x;
             if (Mathf.Abs(diff) > 0.5f)
             {
-                if (diff > 0) MoveAndCheck(MoveDirection.RIGHT);
-                else MoveAndCheck(MoveDirection.LEFT);
+                if (TouchInProgress)
+                {
+                    if (diff > 0)
+                    {
+                        MoveAndCheck(MoveDirection.RIGHT);
+                    }
+
+                    else
+                    {
+                        MoveAndCheck(MoveDirection.LEFT);
+                    }
+                }
+                else
+                {
+                    if (diff > 0)
+                    {
+                        MoveAndCheck(MoveDirection.RIGHT);
+                        lastMove = MoveDirection.RIGHT;
+                    }
+
+                    else
+                    {
+                        MoveAndCheck(MoveDirection.LEFT);
+                        lastMove = MoveDirection.LEFT;
+                    }
+                    TouchInProgress = true;
+                }
             }
+            
+            
             
         }
         //if (activeShape.transform.position.x < )
@@ -339,11 +375,6 @@ public class GameController : MonoBehaviour
         forceDown = !forceDown;
     }
 
-    public void ChangeForceDown()
-    {
-
-    }
-
     public void Restart()
     {
         Time.timeScale = 1;
@@ -400,8 +431,9 @@ public class GameController : MonoBehaviour
 
     private bool TouchWithin()
     {
-        return controls.Touch.TouchPosition.ReadValue<Vector2>().x >= gameBoard.getCorner(Corner.BotLeft).x - 0.5f &&
-            controls.Touch.TouchPosition.ReadValue<Vector2>().x >= gameBoard.getCorner(Corner.TopRight).x + 0.5f;
+        Debug.Log($"{Camera.main.ScreenToWorldPoint(controls.Touch.TouchPosition.ReadValue<Vector2>()).x} >= {gameBoard.getCorner(Corner.BotLeft).x - 0.5f} and {Camera.main.ScreenToWorldPoint(controls.Touch.TouchPosition.ReadValue<Vector2>()).x} <= {gameBoard.getCorner(Corner.TopRight).x + 0.5f}");
+        return Camera.main.ScreenToWorldPoint(controls.Touch.TouchPosition.ReadValue<Vector2>()).x >= gameBoard.getCorner(Corner.BotLeft).x - 0.5f &&
+            Camera.main.ScreenToWorldPoint(controls.Touch.TouchPosition.ReadValue<Vector2>()).x <= gameBoard.getCorner(Corner.TopRight).x;
     }
 
 }
